@@ -11,28 +11,28 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 // artists
-// : 
+// :
 // "Karun,Udbhav"
 // id
-// : 
+// :
 // "29DCr7vJ7V4Y1ExUfVjQqP"
 // img
-// : 
+// :
 // "https://i.scdn.co/image/ab67616d0000b2737716cde064377d3364620a67"
 // name
-// : 
+// :
 // "Haalaat - Interlude"
 // type
-// : 
+// :
 // "track"
 
-const SongCard = () => {
+const SongCard = ({ prop }: { prop: any }) => {
   return (
     <>
       <Card sx={{ mx: 2, display: "inline-block", width: "180px" }}>
         <CardMedia
           component={"img"}
-          image={"https://i.scdn.co/image/ab67616d0000b2737716cde064377d3364620a67"}
+          image={prop.img}
           sx={{
             backgroundColor: "grey",
             objectFit: "cover",
@@ -55,19 +55,35 @@ const SongCard = () => {
         >
           <Box>
             <Link href={""} style={{ textDecoration: "none", color: "black" }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 ,textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                width: "100px",pl:0}}>
-               Haalaat - Interlude
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  width: "100px",
+                  pl: 0,
+                }}
+              >
+                {prop.name}
               </Typography>
-              <Typography variant="subtitle2" color={colors.greyAccent[700]}>
-                Karun,Udbhav
+              <Typography
+                variant="subtitle2"
+                color={colors.greyAccent[700]}
+                sx={{
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  width: "100px",
+                }}
+              >
+                {prop.artists}
               </Typography>
             </Link>
           </Box>
           <Box>
-            <IconButton sx={{mr:1}}>
+            <IconButton sx={{ mr: 1 }}>
               <MusicNoteIcon />
             </IconButton>
           </Box>

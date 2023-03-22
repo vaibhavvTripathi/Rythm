@@ -243,7 +243,7 @@ export default function Home({ code }: { code: string }) {
           }}
         >
           {recentPlay.map((item: any, index: number) => {
-            return <SongCard key={index} />;
+            return <SongCard prop={item} key={index} />;
           })}
         </Box>
       </Box>
