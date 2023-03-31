@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
    const token = req.body.token
-   const url = `https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=8&offset=5`
+   const url = `https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=8&offset=0`
    const options = {
     headers: {
       Authorization: "Bearer " + token,

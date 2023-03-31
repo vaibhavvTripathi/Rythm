@@ -22,11 +22,10 @@ export default async function(req:NextApiRequest,res:NextApiResponse) {
             id : item.track.id,
             name : item.track.name,
             type : item.track.type,
-            img : item.track.album.images[0].url,
-            preview : item.track.preview_url
+            img : item.track.album.images[0].url
          }
        })
-       res.json(recentTracks)
+       res.json(data)
     }
     catch(err) {
        res.status(404)

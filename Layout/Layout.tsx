@@ -4,35 +4,38 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import styles from "../styles/Home.module.css";
 import WebPlayer from "./WebPlayer";
+import WebPlayerProvider from "@/context/WebPlayerContext";
 
-const Layout = ({ children}: { children: ReactNode}) => {
+const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box sx={{ width: "100%" }}>
-        <Navbar/>
-        <Box
-          sx={{
-            height: "92vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
+    <WebPlayerProvider>
+      <Box sx={{ display: "flex" }}>
+        <Sidebar />
+        <Box sx={{ width: "100%" }}>
+          <Navbar />
           <Box
-            className={styles.scrollbar}
             sx={{
-              height: "100%",
-              overflowY: "auto",
-              p: 2,
+              height: "92.5vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            {children}
+            <Box
+              className={styles.scrollbar}
+              sx={{
+                height: "100%",
+                overflowY: "auto",
+                p: 2,
+              }}
+            >
+              {children}
+            </Box>
+            <WebPlayer />
           </Box>
-          <WebPlayer />
         </Box>
       </Box>
-    </Box>
+    </WebPlayerProvider>
   );
 };
 

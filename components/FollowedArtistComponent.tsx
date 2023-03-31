@@ -1,63 +1,60 @@
 import React from "react";
-import { Box, Typography, IconButton } from "@mui/material";
-import { colors } from "@/theme/AppThemeProvider";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Avatar } from "@mui/material";
+import { Card } from "@mui/material";
+import { CardMedia } from "@mui/material";
+import { Box } from "@mui/material";
+import { Typography } from "@mui/material";
 import Link from "next/link";
-import {Paper} from "@mui/material";
-// followers
-// :
-// 41333
-// genres
-// :
-// "desi hip hop"
-// id
-// :
-// "4HQz6xUrKEKQ8nmMKsfvkB"
-// image
-// :
-// "https://i.scdn.co/image/ab6761610000e5eb28e2254f2f2409e7dcda35f5"
-// name
-// :
-// "yungsta"
-// type
-// :
-// "artist"
+import { colors } from "@/theme/AppThemeProvider";
+import { IconButton } from "@mui/material";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+const numeral = require('numeral');
 
-const FollowedArtistComponent = () => {
+const FollowedArtistCard = (prop: any) => {
+  const { id, image, name, type,followers,genres} = prop.item;
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-        width: 300,
-        py: 1,
-        borderRadius: 5,
-      }}
-    >
-      <Avatar
-        alt="yungi"
-        sx={{ width: 60, height: 60 }}
-        src="https://i.scdn.co/image/ab6761610000e5eb28e2254f2f2409e7dcda35f5"
-      />
-      <Box sx={{display:"flex",flexDirection:"column",alignItems:"start"}}>
-        <Link href={""} style={{color:colors.greyAccent[800],textDecoration:"none"}}>
-          <Typography variant="h5" sx={{fontWeight:600}}>
-            Yungsta
-          </Typography>
-        </Link>
-
-        <Typography variant="subtitle1" sx={{ color: colors.greyAccent[800] }}>
-          Artist
-        </Typography>
-        <Typography>Followers : 3.1k</Typography>
-      </Box>
-      <IconButton sx={{ display: "block" }}>
-        <MoreVertIcon sx={{ fontSize: 30 }} />
-      </IconButton>
-    </Paper>
+    <>
+      <Card sx={{ mx: 2, display: "inline-block", width: "220px", py: 1 }}>
+        <CardMedia
+          component={"img"}
+          image={image}
+          sx={{
+            backgroundColor: "grey",
+            objectFit: "cover",
+            height: 200,
+            width: 200,
+            mb: 3,
+            borderRadius: "100%",
+            mx: "auto",
+          }}
+        />
+        <Box
+          sx={{
+            mt: 2,
+            mb: 1,
+            px: 0,
+            pl: 2,
+            alignItems: "start",
+          }}
+        >
+          <Box sx={{}}>
+            <Link href={""} style={{ textDecoration: "none",width:"fit-content", color: "black",display:"block",margin:"0 auto" }}>
+              <Typography variant="h4" sx={{ fontWeight: 600,textAlign:"center" }}>
+                {name}
+              </Typography>
+              <Typography variant="subtitle1" sx={{color:colors.greyAccent[700],textAlign:"center"}}>
+                Followers : {numeral(followers).format('0.0a')}
+              </Typography>
+              <Typography variant="subtitle1" sx={{color:colors.greenAccent[700],textAlign:"center"}}>
+               {type.toUpperCase()}
+              </Typography>
+            </Link>
+          </Box>
+        </Box>
+      </Card>
+    </>
   );
 };
 
-export default FollowedArtistComponent;
+export default FollowedArtistCard;

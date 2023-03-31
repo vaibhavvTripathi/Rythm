@@ -72,7 +72,7 @@ const Sidebar = () => {
             Liked Songs
           </Link>
           <Button  sx={{pl:0,width:"fit-content",display:"flex",alignItems:"start",fontSize:18}}>
-            <AddIcon sx={{position:"relative",top:"2px"}}/>
+            <AddIcon sx={{position:"relative",top:"6px"}}/>
             Create Playlist
           </Button>
         </Box>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import { Box } from "@mui/material";
@@ -9,35 +9,24 @@ import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { WebPlayerContext } from "@/context/WebPlayerContext";
 
-// artists
-// :
-// "Karun,Udbhav"
-// id
-// :
-// "29DCr7vJ7V4Y1ExUfVjQqP"
-// img
-// :
-// "https://i.scdn.co/image/ab67616d0000b2737716cde064377d3364620a67"
-// name
-// :
-// "Haalaat - Interlude"
-// type
-// :
-// "track"
 
 const SongCard = ({ prop }: { prop: any }) => {
+  const { setSong } = useContext(WebPlayerContext);
+
   return (
     <>
-      <Card sx={{ mx: 2, display: "inline-block", width: "180px" }}>
+      <Card sx={{ mx: 2, display: "inline-block", width: "200px" }}>
         <CardMedia
           component={"img"}
           image={prop.img}
           sx={{
             backgroundColor: "grey",
             objectFit: "cover",
-            height: 180,
-            width: 180,
+            height: 200,
+            width: 200,
             mb: 1,
             mx: "auto",
           }}
@@ -54,7 +43,7 @@ const SongCard = ({ prop }: { prop: any }) => {
           }}
         >
           <Box>
-            <Link href={""} style={{ textDecoration: "none", color: "black" }}>
+            <Link href={""} style={{ textDecoration: "none", color: "black" }}  onClick={() => setSong(prop.preview)}>
               <Typography
                 variant="h6"
                 sx={{
@@ -83,8 +72,8 @@ const SongCard = ({ prop }: { prop: any }) => {
             </Link>
           </Box>
           <Box>
-            <IconButton sx={{ mr: 1 }}>
-              <MusicNoteIcon />
+            <IconButton>
+              <MoreVertIcon />
             </IconButton>
           </Box>
         </Box>
