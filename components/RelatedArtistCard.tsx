@@ -9,10 +9,10 @@ import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-const numeral = require('numeral');
 
-const FollowedArtistCard = (prop: any) => {
-  const { id, image, name, type,followers,genres} = prop.item;
+const RelatedArtistCard = (prop: any) => {
+  const { id, image, name, type } = prop.item;
+  
   return (
     <>
       <Card sx={{ mx: 2, display: "inline-block", width: "220px", py: 1 }}>
@@ -33,28 +33,36 @@ const FollowedArtistCard = (prop: any) => {
           sx={{
             mt: 2,
             mb: 1,
+            display: "flex",
+            justifyContent: "space-between",
             px: 0,
             pl: 2,
             alignItems: "start",
           }}
         >
-          <Box sx={{}}>
-            <Link href={`/ArtistPage/${id}`} style={{ textDecoration: "none",width:"fit-content", color: "black",display:"block",margin:"0 auto" }}>
-              <Typography variant="h4" sx={{ fontWeight: 600,textAlign:"center" }}>
+          <Box>
+            <Link
+              href={`/ArtistPage/${id}`}
+              // onClick={()=> prop.refreshFunction()}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Typography variant="h4" sx={{ fontWeight: 600 }}>
                 {name}
               </Typography>
-              <Typography variant="subtitle1" sx={{color:colors.greyAccent[700],textAlign:"center"}}>
-                Followers : {numeral(followers).format('0.0a')}
-              </Typography>
-              <Typography variant="subtitle1" sx={{color:colors.greenAccent[700],textAlign:"center"}}>
-               {type.toUpperCase()}
+              <Typography variant="subtitle1" color={colors.greyAccent[700]}>
+                {type.toUpperCase()}
               </Typography>
             </Link>
           </Box>
+          <Box>
+            <IconButton sx={{}}>
+              <MoreVertIcon />
+            </IconButton>
+          </Box>  
         </Box>
       </Card>
     </>
   );
 };
 
-export default FollowedArtistCard;
+export default RelatedArtistCard;

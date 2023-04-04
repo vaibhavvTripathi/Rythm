@@ -1,22 +1,38 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Container, Paper } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { Box } from "@mui/material";
-import { Typography } from "@mui/material";
 import { colors } from "@/theme/AppThemeProvider";
 const numeral = require("numeral");
 import Link from "next/link";
+import { Card, Typography, CardMedia } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { WebPlayerContext } from "@/context/WebPlayerContext";
+import ArtistCard from "@/components/ArtistCard";
+import RelatedArtistCard from "@/components/RelatedArtistCard";
 
 const ArtistPage = () => {
-  const router = useRouter();
-  const { artistId } = router.query;
   const [isLoading, setIsLoading] = useState(true);
   const [artistData, setArtistData] = useState<any>({});
-  console.log(artistData);
+  const [topTracksArtist, setTopTracksArtist] = useState([]);
+  const [releatedArtistData, setReleatedArtistData] = useState([]);
+  const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
+  // const [artistId, setArtistId] = useState<string>("");
+  console.log(isRefreshed);
+  const { setSong } = useContext(WebPlayerContext);
+  const handleToggle = () => {
+    setIsRefreshed((prev) => !prev);
+  };
+  const router = useRouter();
+  const { artistId } = router.query;
+
   useEffect(() => {
+    setIsLoading(true);
     const token = Cookies.get("access_token");
     const getArtist = async () => {
       const result = await axios.post("../api/artistsPage/getArtist", {
@@ -24,10 +40,30 @@ const ArtistPage = () => {
         artistId,
       });
       setArtistData(result.data);
+    };
+    const topTracksArtist = async () => {
+      const result = await axios.post("../api/artistsPage/getSpecifiedArtist", {
+        token,
+        id: artistId,
+      });
+      setTopTracksArtist(result.data.tracks);
+    };
+    const getRelatedArtist = async () => {
+      const result = await axios.post("../api/artistsPage/getRelatedArtists", {
+        token,
+        id: artistId,
+      });
+      setReleatedArtistData(result.data);
+    };
+
+    const stack = async () => {
+      await getArtist();
+      await topTracksArtist();
+      await getRelatedArtist();
       setIsLoading(false);
     };
-    getArtist();
-  }, []);
+    stack();
+  }, [router]);
   if (isLoading) return <>Loading...</>;
   return (
     <>
@@ -96,6 +132,97 @@ const ArtistPage = () => {
         >
           🧢 Top Tracks of {artistData.name}
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            mt: 3,
+            pb: 5,
+            borderBottom: `1px solid ${colors.greyAccent[300]}`,
+          }}
+        >
+          {topTracksArtist.map((track: any, index) => {
+            const artists = track.artists
+              .map((item: any, index: number) => {
+                return item.name;
+              })
+              .toString();
+            return (
+              <Card
+                key={index}
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <img
+                    src={track.album.images[0].url}
+                    style={{
+                      backgroundColor: "grey",
+                      objectFit: "cover",
+                      height: 60,
+                      width: 60,
+                    }}
+                    alt="artist"
+                  />
+                  <Box
+                  
+                    style={{ textDecoration: "none",cursor :"pointer" }}
+                    onClick={() => {
+                      setSong(track.preview_url);
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 600, color: colors.greyAccent[800] }}
+                    >
+                      {track.name}
+                    </Typography>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ color: colors.greyAccent[600] }}
+                    >
+                      {artists}
+                    </Typography>
+                  </Box>
+                </Box>
+                <IconButton>
+                  <MoreVertIcon />
+                </IconButton>
+              </Card>
+            );
+          })}
+        </Box>
+        <Typography
+          variant="h3"
+          sx={{ color: colors.primary[700], fontWeight: 700, mt: 2 }}
+        >
+          👪 Related Artists
+        </Typography>
+        <Box
+          sx={{
+            overflowX: "scroll",
+            whiteSpace: "nowrap",
+            "&::-webkit-scrollbar": {
+              height: 0,
+            },
+            mt: 4,
+            width: "100%",
+            mx:"auto",
+            p:1,
+            borderRadius : "10px",
+            border : `1px solid ${colors.greyAccent[400]}`
+          }}
+        >
+          {releatedArtistData.map((item, index) => {
+            return (
+              <RelatedArtistCard
+                // refreshFunction={handleToggle}
+                item={item}
+                key={index}
+              />
+            );
+          })}
+        </Box>
       </Container>
     </>
   );

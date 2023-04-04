@@ -6,7 +6,7 @@ export default async function handler(
 ) {
   try {
     const token = req.body.token;
-    const url = `https://api.spotify.com/v1/playlists/6UeSakyzhiEt4NB3UAd6NQ/tracks`;
+    const url = `https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks`;
     const options = {
         headers : {
             Authorization: 'Bearer ' + token

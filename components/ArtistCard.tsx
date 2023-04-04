@@ -41,7 +41,7 @@ const ArtistCard = (prop: any) => {
         >
           <Box>
             <Link
-              href={`ArtistPage/${id}`}
+              href={`/ArtistPage/${id}`}
               style={{ textDecoration: "none", color: "black" }}
             >
               <Typography variant="h4" sx={{ fontWeight: 600 }}>
