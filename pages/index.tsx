@@ -3,7 +3,6 @@ import Image from "next/image";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Cookie, Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import useAuth from "@/hooks/useAuth";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";

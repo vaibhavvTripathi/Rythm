@@ -18,6 +18,7 @@ const Navbar = () => {
           borderRadius: 0,
           mb: "2px",
         }}
+        variant={'outlined'}
       >
         <Box
           sx={{

@@ -15,6 +15,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
 import ArtistCard from "@/components/ArtistCard";
 import RelatedArtistCard from "@/components/RelatedArtistCard";
+import AlbumCard from "@/components/AlbumCard";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 const ArtistPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +24,8 @@ const ArtistPage = () => {
   const [topTracksArtist, setTopTracksArtist] = useState([]);
   const [releatedArtistData, setReleatedArtistData] = useState([]);
   const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
-  // const [artistId, setArtistId] = useState<string>("");
+  const [artistAlbum, setArtistAlbum] = useState([]);
+  console.log(artistAlbum);
   console.log(isRefreshed);
   const { setSong } = useContext(WebPlayerContext);
   const handleToggle = () => {
@@ -56,15 +59,32 @@ const ArtistPage = () => {
       setReleatedArtistData(result.data);
     };
 
+    const getArtistAlbum = async () => {
+      const result = await axios.post("../api/artistsPage/getArtistAlbums", {
+        id: artistId,
+        market: "IN",
+        limit: 10,
+        offset: 0,
+        token,
+      });
+      setArtistAlbum(result.data);
+    };
+
     const stack = async () => {
       await getArtist();
       await topTracksArtist();
       await getRelatedArtist();
+      await getArtistAlbum();
       setIsLoading(false);
     };
     stack();
   }, [router]);
-  if (isLoading) return <>Loading...</>;
+  if (isLoading)
+    return (
+      <>
+        Loading...
+      </>
+    );
   return (
     <>
       <Container sx={{}}>
@@ -165,8 +185,7 @@ const ArtistPage = () => {
                     alt="artist"
                   />
                   <Box
-                  
-                    style={{ textDecoration: "none",cursor :"pointer" }}
+                    style={{ textDecoration: "none", cursor: "pointer" }}
                     onClick={() => {
                       setSong(track.preview_url);
                     }}
@@ -194,7 +213,32 @@ const ArtistPage = () => {
         </Box>
         <Typography
           variant="h3"
-          sx={{ color: colors.primary[700], fontWeight: 700, mt: 2 }}
+          sx={{ color: colors.primary[700], fontWeight: 700, mt: 2, mb: 2}}
+        >
+       💽  Albums
+        </Typography>
+        <Box
+          sx={{
+            overflowX: "scroll",
+            whiteSpace: "nowrap",
+            "&::-webkit-scrollbar": {
+              height: 0,
+            },
+          
+            width: "100%",
+            mx: "auto",
+            p: 1,
+            borderRadius: "10px",
+            border: `1px solid ${colors.greyAccent[400]}`,
+          }}
+        >
+          {artistAlbum.map((item: any, index: number) => {
+            return <AlbumCard prop = {item} key={index} />;
+          })}
+        </Box>
+        <Typography
+          variant="h3"
+          sx={{ color: colors.primary[700], fontWeight: 700, mt: 4,mb:2 }}
         >
           👪 Related Artists
         </Typography>
@@ -205,12 +249,12 @@ const ArtistPage = () => {
             "&::-webkit-scrollbar": {
               height: 0,
             },
-            mt: 4,
+          
             width: "100%",
-            mx:"auto",
-            p:1,
-            borderRadius : "10px",
-            border : `1px solid ${colors.greyAccent[400]}`
+            mx: "auto",
+            p: 1,
+            borderRadius: "10px",
+            border: `1px solid ${colors.greyAccent[400]}`,
           }}
         >
           {releatedArtistData.map((item, index) => {
