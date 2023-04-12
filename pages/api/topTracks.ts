@@ -25,6 +25,7 @@ export default async function handler(
         name: item.name,
         artists: artists.toString(),
         image: item.album.images[0].url,
+        
       };
     });
     res.json(topTracks)

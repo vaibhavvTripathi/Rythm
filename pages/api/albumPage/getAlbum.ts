@@ -6,7 +6,7 @@ export default async function handler(
   ) {
     const token = req.body.token;
     const id = req.body.id;
-    const url = `https://api.spotify.com/v1/albums/${id}?market=IN`
+    const url = `https://api.spotify.com/v1/albums/${id}?market=ES`
     const options ={
         headers : {
           Authorization: 'Bearer ' + token

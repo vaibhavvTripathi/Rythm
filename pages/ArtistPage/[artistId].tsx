@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Container, Paper } from "@mui/material";
+import { Button, Container, Paper } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { Box } from "@mui/material";
 import { colors } from "@/theme/AppThemeProvider";
@@ -17,6 +17,7 @@ import ArtistCard from "@/components/ArtistCard";
 import RelatedArtistCard from "@/components/RelatedArtistCard";
 import AlbumCard from "@/components/AlbumCard";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { ArtistPageContext } from "@/context/ArtistPageContext";
 
 const ArtistPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,15 +26,17 @@ const ArtistPage = () => {
   const [releatedArtistData, setReleatedArtistData] = useState([]);
   const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
   const [artistAlbum, setArtistAlbum] = useState([]);
-  console.log(artistAlbum);
-  console.log(isRefreshed);
   const { setSong } = useContext(WebPlayerContext);
+  const { isFollowed, checkIsFollowed,followArtist,unFollowArtist} = useContext(ArtistPageContext);
+  console.log("fdsfdfsfsufbhsuofsdhbf", isFollowed);
   const handleToggle = () => {
     setIsRefreshed((prev) => !prev);
   };
   const router = useRouter();
   const { artistId } = router.query;
-
+  useEffect(() => {
+    checkIsFollowed(artistId as string);
+  }, [router]);
   useEffect(() => {
     setIsLoading(true);
     const token = Cookies.get("access_token");
@@ -79,12 +82,7 @@ const ArtistPage = () => {
     };
     stack();
   }, [router]);
-  if (isLoading)
-    return (
-      <>
-        Loading...
-      </>
-    );
+  if (isLoading) return <>Loading...</>;
   return (
     <>
       <Container sx={{}}>
@@ -99,6 +97,37 @@ const ArtistPage = () => {
             src={artistData?.images[0].url}
             sx={{ height: 150, width: 150 }}
           />
+          {isFollowed ? (
+            <Button
+              sx={{
+                display: "block",
+                mx: "auto",
+                color: colors.greenAccent[500],
+                border: `1px solid ${colors.greenAccent[500]}`,
+                mt: 2,
+                mb: 0,
+                "&:hover": { backgroundColor: "white" },
+              }}
+              onClick={()=>unFollowArtist(artistId as string)}
+            >
+              <Typography variant="h6">FOLLOWING</Typography>
+            </Button>
+          ) : (
+            <Button
+              sx={{
+                display: "block",
+                mx: "auto",
+                color: colors.greenAccent[500],
+                border: `1px solid ${colors.greenAccent[500]}`,
+                mt: 2,
+                mb: 0,
+                "&:hover": { backgroundColor: "white" },
+              }}
+              onClick={()=>followArtist(artistId as string)}
+            >
+              <Typography variant="h6">FOLLOW</Typography>
+            </Button>
+          )}
         </Box>
         <Typography
           variant="h4"
@@ -106,6 +135,7 @@ const ArtistPage = () => {
         >
           {artistData.name}
         </Typography>
+
         <Typography
           variant="subtitle1"
           sx={{ textAlign: "center", color: colors.greyAccent[700], mt: 1 }}
@@ -146,6 +176,7 @@ const ArtistPage = () => {
             Spotify Link
           </a>
         </Typography>
+
         <Typography
           variant="h3"
           sx={{ color: colors.primary[700], fontWeight: 700, mt: 2 }}
@@ -213,9 +244,9 @@ const ArtistPage = () => {
         </Box>
         <Typography
           variant="h3"
-          sx={{ color: colors.primary[700], fontWeight: 700, mt: 2, mb: 2}}
+          sx={{ color: colors.primary[700], fontWeight: 700, mt: 2, mb: 2 }}
         >
-       💽  Albums
+          💽 Albums
         </Typography>
         <Box
           sx={{
@@ -224,7 +255,7 @@ const ArtistPage = () => {
             "&::-webkit-scrollbar": {
               height: 0,
             },
-          
+
             width: "100%",
             mx: "auto",
             p: 1,
@@ -233,12 +264,12 @@ const ArtistPage = () => {
           }}
         >
           {artistAlbum.map((item: any, index: number) => {
-            return <AlbumCard prop = {item} key={index} />;
+            return <AlbumCard prop={item} key={index} />;
           })}
         </Box>
         <Typography
           variant="h3"
-          sx={{ color: colors.primary[700], fontWeight: 700, mt: 4,mb:2 }}
+          sx={{ color: colors.primary[700], fontWeight: 700, mt: 4, mb: 2 }}
         >
           👪 Related Artists
         </Typography>
@@ -249,7 +280,7 @@ const ArtistPage = () => {
             "&::-webkit-scrollbar": {
               height: 0,
             },
-          
+
             width: "100%",
             mx: "auto",
             p: 1,

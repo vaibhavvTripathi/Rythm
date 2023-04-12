@@ -9,8 +9,8 @@ import Cookies from "js-cookie";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const Search = () => {
   const { setSong } = useContext(WebPlayerContext);
@@ -19,27 +19,28 @@ const Search = () => {
   const [page, setPage] = useState<number>(0);
   console.log(searchResult);
   const debounceString = useDebounce(searchInput, 500);
-  const token = Cookies.get("access_token");
-  const getSearchedSong = async (query: string): Promise<void> => {
-    const data = await axios.post("../api/search/getSearchedItem", {
-      token: token,
-      query: query,
-      offset: page,
-    });
-    setSearchResult(data.data.tracks?.items);
-  };
+
   useEffect(() => {
+    const token = Cookies.get("access_token");
+    const getSearchedSong = async (query: string): Promise<void> => {
+      const data = await axios.post("../api/search/getSearchedItem", {
+        token: token,
+        query: query,
+        offset: page,
+      });
+      setSearchResult(data.data.tracks?.items);
+    };
     getSearchedSong(debounceString);
-  }, [debounceString,page]);
+  }, [debounceString, page]);
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
   const handlePageChangeForward = () => {
-    setPage(prev=> prev+10)
-  }
+    setPage((prev) => prev + 10);
+  };
   const handlePageChangeBackWards = () => {
-   if(page>=10) setPage(prev=> prev-10)
-  }
+    if (page >= 10) setPage((prev) => prev - 10);
+  };
   return (
     <>
       <Container sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -55,6 +56,7 @@ const Search = () => {
           type="text"
           value={searchInput}
           onChange={handleSearch}
+   
         />
         {!searchResult ? (
           <Typography
@@ -65,14 +67,23 @@ const Search = () => {
           </Typography>
         ) : (
           <>
-            <Box sx={{display:"flex",justifyContent:"space-between"}}>
-            <Typography variant="h5" sx={{color:colors.greyAccent[600],my:1}}> Search Results for {debounceString} :</Typography>
-             <Box>
-             <IconButton onClick={handlePageChangeBackWards}><ArrowBackIosIcon/></IconButton>
-             {page/10+1}
-             <IconButton onClick={handlePageChangeForward}><ArrowForwardIosIcon/></IconButton>
-             </Box>
-            
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography
+                variant="h5"
+                sx={{ color: colors.greyAccent[600], my: 1 }}
+              >
+                {" "}
+                Search Results for {debounceString} :
+              </Typography>
+              <Box>
+                <IconButton onClick={handlePageChangeBackWards}>
+                  <ArrowBackIosIcon />
+                </IconButton>
+                {page / 10 + 1}
+                <IconButton onClick={handlePageChangeForward}>
+                  <ArrowForwardIosIcon />
+                </IconButton>
+              </Box>
             </Box>
 
             {searchResult.map((track: any, index: number) => {
@@ -123,35 +134,34 @@ const Search = () => {
                 </Card>
               );
             })}
-               <Typography
-          variant="h5"
-          sx={{
-            mt: 4,
-            pb: 1,
-            fontWeight: 600,
-            color: colors.primary[700],
-            pt: 5,
-            fontStyle: "italic",
-            textAlign: "center",
-            borderTop: `1px solid ${colors.greyAccent[200]}`,
-          }}
-        >
-          &quot;Without music, life would be a mistake. But with my singing, life would be a mistake too.
-          😅 !&quot;
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          sx={{
-            pb: 1,
-            fontWeight: 600,
-            fontStyle: "italic",
-            textAlign: "center",
-          }}
-        >
-          - Chat GPT
-        </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                mt: 4,
+                pb: 1,
+                fontWeight: 600,
+                color: colors.primary[700],
+                pt: 5,
+                fontStyle: "italic",
+                textAlign: "center",
+                borderTop: `1px solid ${colors.greyAccent[200]}`,
+              }}
+            >
+              &quot;Without music, life would be a mistake. But with my singing,
+              life would be a mistake too. 😅 !&quot;
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                pb: 1,
+                fontWeight: 600,
+                fontStyle: "italic",
+                textAlign: "center",
+              }}
+            >
+              - Chat GPT
+            </Typography>
           </>
-          
         )}
       </Container>
     </>

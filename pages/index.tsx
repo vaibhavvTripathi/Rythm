@@ -54,7 +54,7 @@ export default function Home({ code }: { code: string }) {
   const [newReleases, setNewReleases] = useState([]);
   const [recentPlay, setRecentPlay] = useState([]);
   const [recommendedPlay, setRecommendedPlay] = useState([]);
-  console.log(recommendedPlay);
+  console.log(followedArtists);
   const router = useRouter();
 
   var currentTime = new Date().getTime();
@@ -140,8 +140,16 @@ export default function Home({ code }: { code: string }) {
             pb: 1,
             fontWeight: 600,
             color: colors.greyAccent[800],
+            borderBottom : `1px solid ${colors.greyAccent[400]}`
           }}
         >
+          <PlayCircleIcon
+            sx={{
+              fontSize:30,
+              mr: 1,
+              color: colors.secondary[500],
+            }}
+          />
         Latest Releases 🤰
         </Typography>
         <TopChartCarousel props={newReleases} />

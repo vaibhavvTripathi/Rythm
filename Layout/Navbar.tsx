@@ -28,8 +28,8 @@ const Navbar = () => {
             color: colors.primary[700],
           }}
         >
-          <HeadsetIcon sx={{ fontSize: 35 }} />
-          <Typography variant="h4" sx={{ fontWeight: 500 }}>
+          {/* <HeadsetIcon sx={{ fontSize: 50 }} /> */}
+          <Typography variant="h1" sx={{ fontWeight: 600 }}>
             Rythm
           </Typography>
         </Box>

@@ -5,7 +5,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { colors } from '@/theme/AppThemeProvider';
 
 const AlbumCard = ({prop}:{prop:any}) => {
-    console.log(prop)
+ 
     
   return (
     <Card sx={{ mx: 2, display: "inline-block", width: "200px" }}>
