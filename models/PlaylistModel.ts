@@ -10,8 +10,7 @@ const playListSchema = new Schema({
     },
     playListName : {
         type : String,
-        required : true,
-        defaultValue : '#'+'personal_playlist'+Math.random()*1000
+        default : `myPlaylist ${Math.floor(Math.random() *10000)}`
     }
     ,
     songIds : {
@@ -21,5 +20,6 @@ const playListSchema = new Schema({
 })
 
 const PlaylistModel = models.PlaylistModel || model('PlaylistModel',playListSchema,'playlists');
+playListSchema.index({ email: 1 }, { unique: true, sparse: true });
 
 export default PlaylistModel;

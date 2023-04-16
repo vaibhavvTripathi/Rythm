@@ -7,11 +7,15 @@ const userSchema = new Schema({
     unique: true,
     lowercase: true,
     trim: true,
+    
   },
   playLists:{
     type : [{
     name: String,
-    id : String
+    id : {
+      type : String,
+      unique : true,
+    }
   }],
 
   default : []

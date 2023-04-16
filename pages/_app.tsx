@@ -26,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setAct(Cookies.get("access_token"));
         setCode(code);
       });
+      console.log("hi app")
   }, []);
   useEffect(() => {
     setAct(Cookies.get("access_token"));

@@ -8,12 +8,12 @@ export default async function handler(
 ) {
   try {
     await dbConnect();
-    const test = await UserModel.findOneAndUpdate(
+    const removePlaylist = await UserModel.findOneAndUpdate(
       { email: req.body.email },
       { $pull: { playLists: { id: req.body.id } } },
       { new: true }
     );
-    res.json(test);
+    res.json(removePlaylist);
   } catch (err) {
     res.json(err)
   }
