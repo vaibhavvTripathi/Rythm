@@ -6,9 +6,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const songId = req.body.songId;
-  const playListId = req.body.playListId;
-  console.log(playListId,songId)
+  const songId = req.query.songId;
+  const playListId = req.query.playListId;
+
   try {
     await dbConnect();
     const removeSong = await PlaylistModel.findOneAndUpdate(
@@ -16,7 +16,7 @@ export default async function handler(
       { $pull: { songIds: songId } },
       { new: true }
     );
-    console.log(removeSong)
+
     res.json(removeSong);
   } catch (err) {
     res.json(err);

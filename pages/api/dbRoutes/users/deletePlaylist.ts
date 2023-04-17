@@ -6,11 +6,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const email = req.query.email;
+  const id = req.query.id;
   try {
     await dbConnect();
     const removePlaylist = await UserModel.findOneAndUpdate(
-      { email: req.body.email },
-      { $pull: { playLists: { id: req.body.id } } },
+      { email: email },
+      { $pull: { playLists: { id: id } } },
       { new: true }
     );
     res.json(removePlaylist);

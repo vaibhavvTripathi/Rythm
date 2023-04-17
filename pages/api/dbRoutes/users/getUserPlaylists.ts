@@ -6,13 +6,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const email = req.body.email;
+  const email = req.query.email;
   try {
-   
     await dbConnect();
-    console.log("searching..."+email);
     const response = await UserModel.find({ email: email });
-     console.log("searchComplete")
     res.json(response);
   } catch (err) {
     res.status(404).json(err);
