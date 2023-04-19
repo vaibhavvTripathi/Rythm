@@ -6,7 +6,6 @@ import { colors } from '@/theme/AppThemeProvider'
 import FollowedArtistsContainer from './FollowedArtistsContainer'
 
 const TopChartCarousel = ({props}:{props:any}) => {
-  console.log(props)
   return (
     <Paper sx={{width:"70vw",mx:"auto",height:"403px"}}>
      <Carousel autoPlay={true} autoFocus={true} interval={5000} infiniteLoop={true}>

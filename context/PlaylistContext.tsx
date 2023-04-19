@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import React from "react";
 import { createContext, useState } from "react";
 
@@ -30,7 +31,7 @@ export default function PlaylistContextProvider({
   };
   const deleteUserPlaylist = async (email: string, id: string) => {
     const response = await axios.delete(
-      `${URL}/api/dbRoutes/users/deletePlayList?email=${email}`
+      `/api/dbRoutes/users/deletePlaylist?email=${email}&id=${id}`
     );
     console.log(response);
   };
@@ -39,15 +40,18 @@ export default function PlaylistContextProvider({
     name: string,
     id: string
   ) => {
+    const jwtToken = Cookies.get("jwt_token")+"ds";
+
     const response = await axios.post(
-      `${URL}/api/dbRoutes/users/upsertPlayList`,
+      `/api/dbRoutes/users/upsertPlaylist`,
       {
         name,
         id,
         email,
+        jwtToken
       }
     );
-    console.log(response);
+
   };
   const getSong = async (playListId: string) => {
     const response = await axios.get(
@@ -62,11 +66,12 @@ export default function PlaylistContextProvider({
     console.log(response);
   };
   const upsertSong = async (playListId: string, songId: string) => {
+   
     const response = await axios.post(
       `${URL}/api/dbRoutes/playlists/upsertSong`,
       {
         playListId,
-        songId,
+        songId
       }
     );
     console.log(response);

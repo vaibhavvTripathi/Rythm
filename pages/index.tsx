@@ -5,7 +5,7 @@ import { Cookie, Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import TrackCard from "@/components/TrackCard";
 import { Box } from "@mui/system";
@@ -54,28 +54,28 @@ export default function Home({ code }: { code: string }) {
   const [newReleases, setNewReleases] = useState([]);
   const [recentPlay, setRecentPlay] = useState([]);
   const [recommendedPlay, setRecommendedPlay] = useState([]);
-  console.log(followedArtists);
+
   const router = useRouter();
 
   var currentTime = new Date().getTime();
-  console.log(currentTime);
+
 
   useEffect(() => {
     const token = Cookies.get("access_token");
 
-    const getUserName = async () => {
+    const getJwt = async () => {
       console.log(token);
-      const data = await axios.post("/api/userName", {
+      const data : AxiosResponse<{jwtToken:string}> = await axios.post("/api/userName", {
         token: token,
       });
-      console.log(data);
+      const jwt = data.data.jwtToken
+      Cookies.set("jwt_token",jwt)
     };
 
     const getTopTracks = async () => {
       const response = await axios.post("/api/topTracks", {
         token,
       });
-      console.log("res");
       setTracksArray(response.data);
     };
     const getTopArtists = async () => {
@@ -109,11 +109,12 @@ export default function Home({ code }: { code: string }) {
       const response = await axios.post("/api/billBoard", {
         token,
       });
+    
       setRecommendedPlay(response.data);
     };
-
+   console.log("running/...")
     const stack = async () => {
-      await getUserName();
+      await getJwt();
       await getTopTracks();
       await getTopArtists();
       await getFollowedArtist();
@@ -125,6 +126,7 @@ export default function Home({ code }: { code: string }) {
     };
     stack();
   }, []);
+
 
   if (loading) return <Circular></Circular>;
 
@@ -337,7 +339,6 @@ export default function Home({ code }: { code: string }) {
           }}
         >
           {recommendedPlay.map((item: any, index: number) => {
-            console.log(item);
             return <SongCard prop={item} key={index} />;
           })}
         </Box>

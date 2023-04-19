@@ -6,11 +6,13 @@ import styles from "../styles/Home.module.css";
 import WebPlayer from "./WebPlayer";
 import WebPlayerProvider from "@/context/WebPlayerContext";
 import ArtistPageContextProvider from "@/context/ArtistPageContext";
+import PlaylistContextProvider, { PlaylistContext } from "@/context/PlaylistContext";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <ArtistPageContextProvider>
       <WebPlayerProvider>
+        <PlaylistContextProvider>
         <Box sx={{ display: "flex" }}>
           <Sidebar />
           <Box sx={{ width: "100%" }}>
@@ -37,6 +39,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </Box>
           </Box>
         </Box>
+        </PlaylistContextProvider>
+      
       </WebPlayerProvider>
     </ArtistPageContextProvider>
   );

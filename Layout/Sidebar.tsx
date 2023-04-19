@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/system";
 import { motion } from "framer-motion";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import Link from "next/link";
-import { Button, Typography } from "@mui/material";
-
+import { Button, DialogTitle, Typography } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import MenuIcon from "@mui/icons-material/Menu";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { colors } from "@/theme/AppThemeProvider";
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from "@mui/material/transitions";
+import PlaylistPopup from "./PlaylistPopup";
 
 const routes = [
   {
@@ -31,7 +37,22 @@ const routes = [
   },
 ];
 
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const Sidebar = () => {
+ 
+const[isOpen,setIsOpen] = useState<boolean>(false)
+const toggle = () => {
+  setIsOpen(!isOpen)
+}
+
   return (
     <motion.div
       animate={{ width: "250px" }}
@@ -107,11 +128,14 @@ const Sidebar = () => {
             fontSize: 18,
             fontWeight : 600
           }}
+          onClick = {()=> toggle()}
         >
           <AddIcon sx={{ position: "relative", top: "6px" }} />
           Create Playlist
         </Button>
+        <PlaylistPopup isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
       </Box>
+      
     </motion.div>
   );
 };
