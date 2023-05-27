@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const payload = {email : data.email}
         const secret = process.env.SERVER_SECRET
         const jwtToken = jwt.sign(payload,secret)
-        res.status(200).json({jwtToken})
+        res.status(200).json({jwtToken,email:data.email})
     }
     catch(err) {
         res.status(404)

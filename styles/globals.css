@@ -16,3 +16,22 @@
  
 }
 
+.scrollbar {
+  overflow-y: scroll; /* This enables vertical scrolling */
+  scrollbar-width: thin; /* This sets the width of the scrollbar */
+  scrollbar-color: #efefef #f5f5f5; /* This sets the color of the scrollbar */
+}
+
+/* These styles only apply to webkit browsers like Chrome and Safari */
+.scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cdcbcb;
+  border-radius: 20px;
+}

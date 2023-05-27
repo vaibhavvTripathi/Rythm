@@ -18,6 +18,7 @@ import RelatedArtistCard from "@/components/RelatedArtistCard";
 import AlbumCard from "@/components/AlbumCard";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { ArtistPageContext } from "@/context/ArtistPageContext";
+import ArtistSkeleton from "@/components/skeleton/ArtistSkeleton";
 
 const ArtistPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +83,7 @@ const ArtistPage = () => {
     };
     stack();
   }, [router]);
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <ArtistSkeleton/>;
   return (
     <>
       <Container sx={{}}>

@@ -8,16 +8,18 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const playListId = req.query.playListId;
-  const jwtTokenString = req.body.jwtToken;
-  const secretKey = req.query.secretKey;
+  const jwtTokenString = req.headers.authorization?.split(" ")[1];
+  const secretKey = process.env.SERVER_SECRET;
   try {
-    jwt.verify(jwtTokenString, async (err: any, decode: any) => {
+    jwt.verify(jwtTokenString,secretKey, async (err: any, decode: any) => {
       if (err) {
         res.json("authorizationError");
       } else {
         await dbConnect();
+        
         const response = await PlaylistModel.find({ playListId: playListId });
-        res.json(response);
+        res.json(response[0]);
+      
       }
     });
   } catch (err) {

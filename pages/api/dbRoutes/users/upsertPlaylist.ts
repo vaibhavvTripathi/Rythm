@@ -9,7 +9,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const jwtTokenString = req.body.jwtToken;
+
   const secretKey = process.env.SERVER_SECRET;
+  console.log("fdsfs",jwtTokenString)
   try {
     jwt.verify(jwtTokenString, secretKey, async (err: any, decode: any) => {
       if (err) {

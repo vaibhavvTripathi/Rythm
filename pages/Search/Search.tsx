@@ -11,14 +11,24 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const Search = () => {
   const { setSong } = useContext(WebPlayerContext);
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any>([]);
   const [page, setPage] = useState<number>(0);
-  console.log(searchResult);
   const debounceString = useDebounce(searchInput, 500);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     const token = Cookies.get("access_token");
@@ -56,7 +66,6 @@ const Search = () => {
           type="text"
           value={searchInput}
           onChange={handleSearch}
-   
         />
         {!searchResult ? (
           <Typography
@@ -128,7 +137,7 @@ const Search = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <IconButton>
+                  <IconButton onClick={(e) => handleClick(e)}>
                     <MoreVertIcon />
                   </IconButton>
                 </Card>
@@ -164,6 +173,26 @@ const Search = () => {
           </>
         )}
       </Container>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={handleClose}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Add to Playlist
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Like this Song
+          </Typography>
+        </MenuItem>
+      </Menu>
     </>
   );
 };

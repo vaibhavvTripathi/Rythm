@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { useRouter } from "next/router";
 
 
 const TopCharts = ({ prop }: { prop: any }) => {
@@ -14,6 +15,7 @@ const TopCharts = ({ prop }: { prop: any }) => {
       return item.name;
     })
     .toString();
+    const router = useRouter();
   return (
     <>
       <Box
@@ -79,10 +81,11 @@ const TopCharts = ({ prop }: { prop: any }) => {
                 "&:hover": { background: colors.secondary[500] },
                 color: "white",
               }}
+              onClick={()=> router.push(`/AlbumPage/${prop.id}`)}
             >
               <PlayCircleIcon />
             </IconButton>
-            <IconButton sx={{}}>
+            <IconButton >
               <MoreVertIcon  />
             </IconButton>
           </Box>

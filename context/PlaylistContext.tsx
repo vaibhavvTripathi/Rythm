@@ -25,11 +25,17 @@ export default function PlaylistContextProvider({
 
   const getUsersPlaylist = async (email: string) => {
     const response = await axios.get(
-      `${URL}/api/dbRoutes/users/getUserPlayLists?email=${email}`
+      `/api/dbRoutes/users/getUserPlaylists?email=${email}`, {
+        headers : {
+          Authorization : 'Bearer ' + Cookies.get('jwt_token')
+        }
+      }
     );
+    setPlayListArray(response.data.playLists)
     console.log(response);
   };
   const deleteUserPlaylist = async (email: string, id: string) => {
+
     const response = await axios.delete(
       `/api/dbRoutes/users/deletePlaylist?email=${email}&id=${id}`
     );
@@ -40,7 +46,7 @@ export default function PlaylistContextProvider({
     name: string,
     id: string
   ) => {
-    const jwtToken = Cookies.get("jwt_token")+"ds";
+    const jwtToken = Cookies.get("jwt_token");
 
     const response = await axios.post(
       `/api/dbRoutes/users/upsertPlaylist`,
@@ -51,12 +57,19 @@ export default function PlaylistContextProvider({
         jwtToken
       }
     );
-
+    setPlayListArray(response.data.playLists)
+    console.log(response)
   };
   const getSong = async (playListId: string) => {
     const response = await axios.get(
-      `${URL}/api/dbRoutes/playlists/getPlayListSongs?playListId=${playListId}`
+      `/api/dbRoutes/playlists/getPlaylistSongs?playListId=${playListId}`,
+      {
+        headers : {
+          Authorization : "Bearer " + Cookies.get("jwt_token")
+        }
+      }
     );
+   
     console.log(response);
   };
   const deleteSong = async (songId: string, playListId: string) => {

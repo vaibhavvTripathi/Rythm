@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default async function  handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.body.token;
   const url = `https://api.spotify.com/v1/browse/new-releases?country=SE&limit=10&offset=5`;
   const options = {

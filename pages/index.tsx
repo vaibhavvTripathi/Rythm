@@ -4,7 +4,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Cookie, Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import TrackCard from "@/components/TrackCard";
@@ -20,12 +20,16 @@ import TopChartCarousel from "@/components/TopChartCarousel";
 import SongCard from "@/components/SongCard";
 import recentTracks from "./api/recentTracks";
 import FollowedArtistCard from "@/components/FollowedArtistComponent";
+import { PlaylistContext } from "@/context/PlaylistContext";
+import IndexSkelton from "@/components/skeleton/IndexSkeleton";
 
 const inter = Inter({ subsets: ["latin"] });
 type topTrack = {
   name: string;
   artists: string;
   image: string;
+  preview : string;
+  id : string;
 };
 
 type topArtists = {
@@ -45,7 +49,6 @@ type followedArtist = {
 };
 
 export default function Home({ code }: { code: string }) {
-  
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<string>("");
   const [topTracksArray, setTracksArray] = useState<topTrack[]>([]);
@@ -55,27 +58,29 @@ export default function Home({ code }: { code: string }) {
   const [recentPlay, setRecentPlay] = useState([]);
   const [recommendedPlay, setRecommendedPlay] = useState([]);
 
+  const {getUsersPlaylist} = useContext(PlaylistContext)
   const router = useRouter();
 
   var currentTime = new Date().getTime();
-
 
   useEffect(() => {
     const token = Cookies.get("access_token");
 
     const getJwt = async () => {
       console.log(token);
-      const data : AxiosResponse<{jwtToken:string}> = await axios.post("/api/userName", {
-        token: token,
-      });
-      const jwt = data.data.jwtToken
-      Cookies.set("jwt_token",jwt)
+      const data: AxiosResponse<{ jwtToken: string; email: string }> =
+        await axios.post("/api/userName", {
+          token: token,
+        });
+      const jwt = data.data.jwtToken;
+      await getUsersPlaylist(Cookies.get("rythm_id") as string);
     };
 
     const getTopTracks = async () => {
       const response = await axios.post("/api/topTracks", {
         token,
       });
+      console.log(response.data)
       setTracksArray(response.data);
     };
     const getTopArtists = async () => {
@@ -109,10 +114,10 @@ export default function Home({ code }: { code: string }) {
       const response = await axios.post("/api/billBoard", {
         token,
       });
-    
+
       setRecommendedPlay(response.data);
     };
-   console.log("running/...")
+    console.log("running/...");
     const stack = async () => {
       await getJwt();
       await getTopTracks();
@@ -127,12 +132,10 @@ export default function Home({ code }: { code: string }) {
     stack();
   }, []);
 
-
-  if (loading) return <Circular></Circular>;
+  if (loading) return <IndexSkelton/>;
 
   return (
     <>
-    
       <Box>
         <Typography
           variant="h1"
@@ -142,17 +145,17 @@ export default function Home({ code }: { code: string }) {
             pb: 1,
             fontWeight: 600,
             color: colors.greyAccent[800],
-            borderBottom : `1px solid ${colors.greyAccent[400]}`
+            borderBottom: `1px solid ${colors.greyAccent[400]}`,
           }}
         >
           <PlayCircleIcon
             sx={{
-              fontSize:30,
+              fontSize: 30,
               mr: 1,
               color: colors.secondary[500],
             }}
           />
-        Latest Releases 🤰
+          Latest Releases 🤰
         </Typography>
         <TopChartCarousel props={newReleases} />
         <Typography
@@ -194,6 +197,8 @@ export default function Home({ code }: { code: string }) {
                 name={item.name}
                 artist={item.artists}
                 image={item.image}
+                preview = {item.preview}
+                id = {item.id}
               />
             );
           })}
@@ -226,8 +231,8 @@ export default function Home({ code }: { code: string }) {
             "&::-webkit-scrollbar": {
               height: 0,
             },
-
             width: "85vw",
+            mx:"auto"
           }}
         >
           {followedArtists.map((item, index) => {
@@ -264,6 +269,7 @@ export default function Home({ code }: { code: string }) {
               height: 0,
             },
             width: "85vw",
+            mx:"auto"
           }}
         >
           {recentPlay.map((item: any, index: number) => {
@@ -300,6 +306,7 @@ export default function Home({ code }: { code: string }) {
             },
 
             width: "85vw",
+            mx:"auto"
           }}
         >
           {topArtists.map((item, index) => {
@@ -336,6 +343,7 @@ export default function Home({ code }: { code: string }) {
               height: 0,
             },
             width: "85vw",
+            mx:"auto"
           }}
         >
           {recommendedPlay.map((item: any, index: number) => {
@@ -355,8 +363,8 @@ export default function Home({ code }: { code: string }) {
             borderTop: `1px solid ${colors.greyAccent[200]}`,
           }}
         >
-          &quot;Good music doesn&apos;t have an expiration date, so let the funk play on
-          👄 !&quot;
+          &quot;Good music doesn&apos;t have an expiration date, so let the funk
+          play on 👄 !&quot;
         </Typography>
         <Typography
           variant="subtitle1"

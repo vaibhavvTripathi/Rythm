@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import { Box, Container } from "@mui/system";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import styles from "../styles/Home.module.css";
 import WebPlayer from "./WebPlayer";
 import WebPlayerProvider from "@/context/WebPlayerContext";
 import ArtistPageContextProvider from "@/context/ArtistPageContext";
@@ -26,7 +25,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               }}
             >
               <Box
-                className={styles.scrollbar}
+                className={"scrollbar"}
                 sx={{
                   height: "100%",
                   overflowY: "auto",

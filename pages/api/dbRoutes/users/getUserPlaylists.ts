@@ -8,8 +8,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const email = req.query.email;
-  const jwtTokenString = req.body.jwtToken;
-  const secretKey = req.query.secretKey;
+  const jwtTokenString = req.headers.authorization?.split(" ")[1];
+  const secretKey = process.env.SERVER_SECRET;
 
   try {
 
@@ -20,7 +20,7 @@ export default async function handler(
       else {
         await dbConnect();
         const response = await UserModel.find({ email: email });
-        res.json(response);
+        res.json(response[0]);
       }
 
     })

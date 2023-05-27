@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "@mui/material/Card";
 import { CardMedia, Typography } from "@mui/material";
 import { colors } from "@/theme/AppThemeProvider";
 import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { WebPlayerContext } from "@/context/WebPlayerContext";
 
-const TrackCard = ({name,artist,image}:{name:string,artist:string,image:string}) => {
+const TrackCard = ({name,artist,image,preview,id}:{name:string,artist:string,image:string,preview:string,id: string}) => {
+
+  const {setSong} = useContext(WebPlayerContext);
+
+  const handlePlay = () => {
+    console.log("hi")
+    setSong(preview);
+  }
   return (  
     <>
       <Card
@@ -41,6 +49,7 @@ const TrackCard = ({name,artist,image}:{name:string,artist:string,image:string})
             "&:hover": { background: colors.secondary[500] },
             color: "white",
           }}
+          onClick={handlePlay}
         >
           <PlayCircleIcon />
         </IconButton>

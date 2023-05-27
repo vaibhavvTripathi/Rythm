@@ -11,7 +11,7 @@ export default async function handler(
   const playListId = req.body.playListId;
   const songId = req.body.songId;
   const jwtTokenString = req.body.jwtToken;
-  const secretKey = req.query.secretKey;
+  const secretKey = process.env.SERVER_SECRET;
 
   try {
     jwt.verify(jwtTokenString, secretKey, async (err: any, decode: any) => {

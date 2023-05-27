@@ -48,7 +48,8 @@ const PlaylistPopup = ({ isOpen, toggle }: props) => {
     })
     const {display_name,email} = response.data
     console.log("userdetails", display_name,email,uuid);
-    const dbResponse = await upsertUserPlaylist(email,"",uuid)
+    const dbResponse = await upsertUserPlaylist(email,"song#"+Math.random()*100,uuid)
+    handleClose()
     
   }
   return (

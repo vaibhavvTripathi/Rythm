@@ -10,6 +10,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 const TopCharts = () => {
   const name = "vaibhav"
+
   return (
     <>
       <Box
@@ -20,6 +21,7 @@ const TopCharts = () => {
           mx: "auto",
         }}
       >
+    
         <Box sx={{ width: 600, height: 401 }}>
           <img
             style={{ width: "100%", height: "100%", objectFit: "cover" }}

@@ -9,6 +9,7 @@ import { Paper } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
 import AlbumCard from "@/components/AlbumCard";
+import AlbumSkeleton from "@/components/skeleton/AlbumSkeleton";
 
 const AlbumPage = () => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const AlbumPage = () => {
   }, [router]);
 
   console.log(isLoading);
-  if (isLoading) return <>LOADING..</>;
+  if (isLoading) return <AlbumSkeleton/>;
   return (
     <div>
       <Container>

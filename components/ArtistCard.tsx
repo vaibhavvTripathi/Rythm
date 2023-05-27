@@ -9,12 +9,17 @@ import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { motion } from "framer-motion";
 
 const ArtistCard = (prop: any) => {
   const { id, image, name, type } = prop.item;
   return (
     <>
-      <Card sx={{ mx: 2, display: "inline-block", width: "220px", py: 1 }}>
+      <motion.div
+       whileHover={{scale : 1.025}}
+       style ={{display: "inline-block", width: "220px",marginRight:"20px" }}
+      >
+        <Card >
         <CardMedia
           component={"img"}
           image={image}
@@ -59,6 +64,7 @@ const ArtistCard = (prop: any) => {
           </Box>
         </Box>
       </Card>
+      </motion.div>
     </>
   );
 };

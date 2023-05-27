@@ -10,7 +10,7 @@ const playListSchema = new Schema({
     },
     playListName : {
         type : String,
-        default : `myPlaylist ${Math.floor(Math.random() *10000)}`
+        default : `myPlaylist-${Math.floor(Math.random() *10000)}`
     }
     ,
     songIds : {

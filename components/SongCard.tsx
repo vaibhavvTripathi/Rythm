@@ -11,6 +11,7 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
+import { motion } from "framer-motion";
 
 
 const SongCard = ({ prop }: { prop: any }) => {
@@ -18,7 +19,11 @@ const SongCard = ({ prop }: { prop: any }) => {
 
   return (
     <>
-      <Card sx={{ mx: 2, display: "inline-block", width: "200px" }}>
+     <motion.div
+       whileHover={{scale : 1.0222225}}
+       style ={{display: "inline-block", width: "220px",marginRight:"20px" }}
+      >
+        <Card sx={{ mx: 2, display: "inline-block", width: "200px" }}>
         <CardMedia
           component={"img"}
           image={prop.img}
@@ -78,6 +83,8 @@ const SongCard = ({ prop }: { prop: any }) => {
           </Box>
         </Box>
       </Card>
+      </motion.div>
+      
     </>
   );
 };
