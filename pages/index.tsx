@@ -73,6 +73,7 @@ export default function Home({ code }: { code: string }) {
           token: token,
         });
       const jwt = data.data.jwtToken;
+      console.log("my beloved jwt",jwt)
       await getUsersPlaylist(Cookies.get("rythm_id") as string);
     };
 

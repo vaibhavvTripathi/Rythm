@@ -6,7 +6,7 @@ const customPlaylist = new Schema({
         required : true,
         unique : true,
     },
-    playLists : [{
+    playlists : [{
         type : [
             {id : {
              type : String,
