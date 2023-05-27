@@ -7,7 +7,7 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { useRouter } from "next/router";
-
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 const TopCharts = ({ prop }: { prop: any }) => {
   const name = prop.artists
@@ -83,7 +83,7 @@ const TopCharts = ({ prop }: { prop: any }) => {
               }}
               onClick={()=> router.push(`/AlbumPage/${prop.id}`)}
             >
-              <PlayCircleIcon />
+              <DoubleArrowIcon />
             </IconButton>
             <IconButton >
               <MoreVertIcon  />

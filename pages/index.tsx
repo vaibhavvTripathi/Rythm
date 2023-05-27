@@ -58,7 +58,7 @@ export default function Home({ code }: { code: string }) {
   const [recentPlay, setRecentPlay] = useState([]);
   const [recommendedPlay, setRecommendedPlay] = useState([]);
 
-  const {getUsersPlaylist} = useContext(PlaylistContext)
+  // const {getUsersPlaylist} = useContext(PlaylistContext)
   const router = useRouter();
 
   var currentTime = new Date().getTime();
@@ -66,16 +66,16 @@ export default function Home({ code }: { code: string }) {
   useEffect(() => {
     const token = Cookies.get("access_token");
 
-    const getJwt = async () => {
-      console.log(token);
-      const data: AxiosResponse<{ jwtToken: string; email: string }> =
-        await axios.post("/api/userName", {
-          token: token,
-        });
-      const jwt = data.data.jwtToken;
-      console.log("my beloved jwt",jwt)
-      await getUsersPlaylist(Cookies.get("rythm_id") as string);
-    };
+    // const getJwt = async () => {
+    //   console.log(token);
+    //   const data: AxiosResponse<{ jwtToken: string; email: string }> =
+    //     await axios.post("/api/userName", {
+    //       token: token,
+    //     });
+    //   const jwt = data.data.jwtToken;
+    //   console.log("my beloved jwt",jwt)
+    //   await getUsersPlaylist(jwt);
+    // };
 
     const getTopTracks = async () => {
       const response = await axios.post("/api/topTracks", {
@@ -120,7 +120,7 @@ export default function Home({ code }: { code: string }) {
     };
     console.log("running/...");
     const stack = async () => {
-      await getJwt();
+      // await getJwt();
       await getTopTracks();
       await getTopArtists();
       await getFollowedArtist();

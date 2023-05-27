@@ -1,103 +1,169 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import React from "react";
+import React, { useEffect } from "react";
 import { createContext, useState } from "react";
+import { CustomPlaylistType, SinglePlaylistModel } from "@/pages/api/dbRoutes/type";
+
+ 
+const defaultPlaylist : CustomPlaylistType = {
+  email : "",
+  playlists : []
+}
 
 export const PlaylistContext = createContext({
-  playlistArray: [],
-  songArray: [],
-  getUsersPlaylist: async (email: string) => {},
-  deleteUserPlaylist: async (email: string, id: string) => {},
-  upsertUserPlaylist: async (email: string, name: string, id: string) => {},
-  getSong: async (playListId: string) => {},
-  deleteSong: async (songId: string, playListId: string) => {},
-  upsertSong: async (playListId: string, songId: string) => {},
+  Playlist : defaultPlaylist,
+  getPlaylist: async () => {},
+  deletePlaylist: async ( id: string) => {},
+  createPlaylist: async (playlistName : string) => {},
+  getSongsbyPlaylistId: (playListId: string) => {},
+  addSong: async ( playListId: string,songId: string) => {},
+  deleteSong: async (playListId: string, songId: string) => {},
 });
+
+const BASE_URL = '/api/dbRoutes'
 
 export default function PlaylistContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const URL = `http://localhost:3000`;
-  const [playlistArray, setPlayListArray] = useState([]);
-  const [songArray, setSongArray] = useState([]);
+ 
+  const[Playlist,setPlaylist] = useState<CustomPlaylistType>(defaultPlaylist)
 
-  const getUsersPlaylist = async (email: string) => {
-    const response = await axios.get(
-      `/api/dbRoutes/users/getUserPlaylists?email=${email}`, {
-        headers : {
-          Authorization : 'Bearer ' + Cookies.get('jwt_token')
-        }
-      }
-    );
-    setPlayListArray(response.data.playLists)
-    console.log(response);
+  const stack = async () => {
+    await getJwtToken();
+    await getPlaylist();
+  }
+  useEffect(()=> {   
+     stack()
+  },[])
+  const getJwtToken = async() => {
+    const token = Cookies.get("access_token");
+    const data: AxiosResponse<{ jwtToken: string; email: string }> =
+        await axios.post("/api/userName", {
+          token: token,
+        });
+    const jwt = data.data.jwtToken;
+    Cookies.set("jwtToken",jwt);
+  }
+  const getPlaylist = async () => {
+    try {
+      const jwt = Cookies.get("jwtToken");
+        const getPlaylists = await axios.get(`${BASE_URL}/getPlaylist`,{
+          headers : {
+            Authorization : 'Bearer '+ jwt
+          }
+        })
+        setPlaylist(getPlaylists.data)
+    }
+    catch(err) {
+        console.log(err)
+    }
   };
-  const deleteUserPlaylist = async (email: string, id: string) => {
+  const deletePlaylist = async (id: string) => {
+     try {
+         const jwt = Cookies.get("jwtToken");
+         const updatedPlaylistArray = Playlist.playlists.filter((item,index)=> {
+              return item.id !== id
+         })
+         const updatedPlaylist = {...Playlist,playlists:updatedPlaylistArray}
+         const updatedPlaylists : AxiosResponse<CustomPlaylistType> = await axios.post(`${BASE_URL}/updatePlaylist`,updatedPlaylist,{
+          headers : {
+            Authorization : 'Bearer ' + jwt
+          }
+         })
+         setPlaylist(updatedPlaylists.data)
+     }
+     catch(err) {
+        console.log(err)
+     }
+  };
+  const createPlaylist = async (playlistName : string) => {
+    const jwt = Cookies.get("jwtToken");
+    const newPlaylist = {
+      id : self.crypto.randomUUID(),
+      name : playlistName,
+      songs : []
+    }
+    const updatedPlayListArray = [...Playlist.playlists,newPlaylist];
+    const updatedPlaylist = {...Playlist,playlists : updatedPlayListArray};
+    const updatedPlaylists : AxiosResponse<CustomPlaylistType> = await axios.post(`${BASE_URL}/updatePlaylist`,updatedPlaylist,{
+      headers : {
+        Authorization : 'Bearer ' + jwt
+      }
+     })
+     setPlaylist(updatedPlaylists.data)
+  };
+  const getSongsbyPlaylistId =  (playListId: string) => {
+     const songs : SinglePlaylistModel  = Playlist.playlists.find((item)=> {
+          return playListId === item.id
+     }) ?? {id : "",name : "",songs : []}
 
-    const response = await axios.delete(
-      `/api/dbRoutes/users/deletePlaylist?email=${email}&id=${id}`
-    );
-    console.log(response);
+     return songs;
   };
-  const upsertUserPlaylist = async (
-    email: string,
-    name: string,
-    id: string
-  ) => {
-    const jwtToken = Cookies.get("jwt_token");
+  const addSong = async (playlistId : string, songId : string ) => {
+       const jwt = Cookies.get("jwtToken");
+       const playlist  = Playlist.playlists.find((item)=> {
+         return playlistId === item.id
+       })
+       if(playlist!==undefined) {
+         const oldSongArray : Array<string> = playlist.songs;
+         if(playlist.songs.includes(songId)==true) {
+            return;
+         }
+         const newSongArray : Array<string> = [...oldSongArray,songId];
+         const newPlaylists = Playlist.playlists.map((item)=> {
+              if(item.id===playlistId) {
+                return {...item,songs : newSongArray}
+              }
+              return item;
+         }) 
+         const updatedObject = {...Playlist,playlists : newPlaylists}
+         const updatedPlaylists : AxiosResponse<CustomPlaylistType> = await axios.post(`${BASE_URL}/updatePlaylist`,updatedObject,{
+          headers : {
+            Authorization : 'Bearer ' + jwt
+          }
+         })
+         setPlaylist(updatedPlaylists.data)
+       }
+  }
+  const deleteSong = async (songId: string, playlistId: string) => {
+    const jwt = Cookies.get("jwtToken");
+    const playlist  = Playlist.playlists.find((item)=> {
+      return playlistId === item.id
+    })
+    if(playlist!==undefined) {
 
-    const response = await axios.post(
-      `/api/dbRoutes/users/upsertPlaylist`,
-      {
-        name,
-        id,
-        email,
-        jwtToken
+      if(playlist.songs.includes(songId)==true) {
+         return;
       }
-    );
-    setPlayListArray(response.data.playLists)
-    console.log(response)
+      const newSongArray : Array<string> = playlist.songs.filter((item)=> {
+        return item !== songId
+      })
+      const newPlaylists = Playlist.playlists.map((item)=> {
+           if(item.id===playlistId) {
+             return {...item,songs : newSongArray}
+           }
+           return item;
+      }) 
+      const updatedObject = {...Playlist,playlists : newPlaylists}
+      const updatedPlaylists : AxiosResponse<CustomPlaylistType> = await axios.post(`${BASE_URL}/updatePlaylist`,updatedObject,{
+       headers : {
+         Authorization : 'Bearer ' + jwt
+       }
+      })
+      setPlaylist(updatedPlaylists.data)
+    }
   };
-  const getSong = async (playListId: string) => {
-    const response = await axios.get(
-      `/api/dbRoutes/playlists/getPlaylistSongs?playListId=${playListId}`,
-      {
-        headers : {
-          Authorization : "Bearer " + Cookies.get("jwt_token")
-        }
-      }
-    );
-   
-    console.log(response);
-  };
-  const deleteSong = async (songId: string, playListId: string) => {
-    const response = await axios.delete(
-      `${URL}/api/dbRoutes/playlists/deleteSong?songId=${songId}&playListId=${playListId}`
-    );
-    console.log(response);
-  };
-  const upsertSong = async (playListId: string, songId: string) => {
-   
-    const response = await axios.post(
-      `${URL}/api/dbRoutes/playlists/upsertSong`,
-      {
-        playListId,
-        songId
-      }
-    );
-    console.log(response);
-  };
+ 
   const contextVal = {
-    playlistArray,
-    songArray,
-    getUsersPlaylist,
-    deleteUserPlaylist,
-    upsertUserPlaylist,
-    getSong,
+    Playlist,
+    getPlaylist,
+    deletePlaylist,
+    createPlaylist,
+    getSongsbyPlaylistId,
+    addSong,
     deleteSong,
-    upsertSong,
   };
 
   return (
