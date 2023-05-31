@@ -34,23 +34,16 @@ const Transition = React.forwardRef(function Transition(
 
 const PlaylistPopup = ({ isOpen, toggle }: props) => {
 
-  const {upsertUserPlaylist} = useContext(PlaylistContext)
+  const {createPlaylist} = useContext(PlaylistContext)
+  const[name,setName] = useState<string>("");
   const uuid : string = crypto.randomUUID().toString();
   const handleClose = () => {
+    setName("")
     toggle(!isOpen);
   };
-  const handlePlaylist = async () => {
-    const token = Cookies.get("access_token");
-    const url = '/api/userName'
-    
-    const response : AxiosResponse<userObj> = await axios.post(url, {
-        token
-    })
-    const {display_name,email} = response.data
-    console.log("userdetails", display_name,email,uuid);
-    const dbResponse = await upsertUserPlaylist(email,"song#"+Math.random()*100,uuid)
+ const handleCreate = async (playlistName : string) => {
+   await createPlaylist(playlistName)
     handleClose()
-    
   }
   return (
     <>
@@ -71,10 +64,10 @@ const PlaylistPopup = ({ isOpen, toggle }: props) => {
               <Typography variant="h4" sx={{ color: colors.greyAccent[800] }}>
               🎸 Name the playlist :
               </Typography>
-              <TextField sx={{ p: 0 }}></TextField>
+              <TextField value={name} onChange={(e)=>setName(e.target.value)} sx={{ p: 0 }}></TextField>
             </Box>
           </Box>
-          <Button variant="contained" sx={{ p: 1, mt: 2, fontSize: "1.2em" }} onClick={handlePlaylist}>
+          <Button onClick={()=>handleCreate(name)} variant="contained" sx={{ p: 1, mt: 2, fontSize: "1.2em" }} >
             + Create Playlist
           </Button>
           <Typography

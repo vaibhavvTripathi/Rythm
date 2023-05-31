@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Button, Container, Paper } from "@mui/material";
+import { Button, Container, Menu, MenuItem, Paper } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { Box } from "@mui/material";
 import { colors } from "@/theme/AppThemeProvider";
@@ -19,6 +19,7 @@ import AlbumCard from "@/components/AlbumCard";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { ArtistPageContext } from "@/context/ArtistPageContext";
 import ArtistSkeleton from "@/components/skeleton/ArtistSkeleton";
+import ListPopup from "@/components/ListPopup";
 
 const ArtistPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,10 +30,25 @@ const ArtistPage = () => {
   const [artistAlbum, setArtistAlbum] = useState([]);
   const { setSong } = useContext(WebPlayerContext);
   const { isFollowed, checkIsFollowed,followArtist,unFollowArtist} = useContext(ArtistPageContext);
-  console.log("fdsfdfsfsufbhsuofsdhbf", isFollowed);
+  const[selectedSong,setSelectedSong] = useState<string>("");
   const handleToggle = () => {
     setIsRefreshed((prev) => !prev);
   };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>,id:string) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedSong(id);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+ 
+  const[isOpen,setIsOpen] = useState<boolean>(false)
+  const toggle = () => {
+    setIsOpen(!isOpen)
+    handleClose();
+  }
   const router = useRouter();
   const { artistId } = router.query;
   useEffect(() => {
@@ -94,6 +110,27 @@ const ArtistPage = () => {
             alignItems: "center",
           }}
         >
+          <ListPopup songId={selectedSong} isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={toggle}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Add to Playlist
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Like this Song
+          </Typography>
+        </MenuItem>
+      </Menu>
           <Avatar
             src={artistData?.images[0].url}
             sx={{ height: 150, width: 150 }}
@@ -236,7 +273,7 @@ const ArtistPage = () => {
                     </Typography>
                   </Box>
                 </Box>
-                <IconButton>
+                <IconButton onClick={(e) => handleClick(e,track.id as string)}>
                   <MoreVertIcon />
                 </IconButton>
               </Card>

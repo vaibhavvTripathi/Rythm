@@ -54,19 +54,31 @@ const Sidebar = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [mobile, setMobile] = useState<boolean>(false);
-  const { getUsersPlaylist, playlistArray } = useContext(PlaylistContext);
+  const { Playlist, createPlaylist, deletePlaylist } =
+    useContext(PlaylistContext);
   const router = useRouter();
   const toggle = () => {
     setIsOpen(!isOpen);
   };
-
+  
+  const handleRoutes = (name : string,songs : Array<string>) => {
+    router.push(
+      {pathname : `/Libraries/${name}`,
+       query : {
+        token : Cookies.get("access_token"),
+        songs : songs
+       }
+      }
+    )
+}
+  
   useEffect(() => {
     const path = router.pathname;
     if (path === "/Libraries/Libraries") {
       setCurrentTab(2);
     } else if (path === "/Search/Search") {
       setCurrentTab(1);
-    } else {
+    } else if (path === "/") {
       setCurrentTab(0);
     }
   }, [router]);
@@ -123,41 +135,30 @@ const Sidebar = () => {
             </Box>
           );
         })}
-       
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            mt: 2,
+          }}
+          onClick={toggle}
+        >
+          <IconButton sx={{ fontWeight: 600, color: "black", p: 0 }}>
+            <AddIcon sx={{ fontSize: "1.2em" }} />
+          </IconButton>
+          {!mobile && (
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              &nbsp; Create Playlist
+            </Typography>
+          )}
+        </Box>
       </Box>
       <PlaylistPopup
-          isOpen={isOpen}
-          toggle={(newVal: boolean) => setIsOpen(newVal)}
-        />
-      {/* <Box
-        sx={{
-          mx: 1,
-          mt: 5,
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
-          pb: 2,
-          borderBottom: "1px solid rgb(202, 197, 197)",
-        }}
-      >
-        <Button
-          sx={{
-            p: 0,
-            width: "50px",
-            display: "flex",
-            alignItems: "start",
-            fontSize: 18,
-            fontWeight: 600,
-            color: "black",
-            border:"1px solid black"
-          }}
-          onClick={() => toggle()}
-        >
-          <AddIcon sx={{color: "black",mx:"auto" }} />
-          {!mobile && "Create Playlist"}
-        </Button>
-       
-      </Box> */}
+        isOpen={isOpen}
+        toggle={(newVal: boolean) => setIsOpen(newVal)}
+      />
+
       <Typography
         sx={{
           textAlign: "left",
@@ -180,26 +181,28 @@ const Sidebar = () => {
           mb: 1,
         }}
       >
-        {playlistArray?.map((item: any, index: any) => {
+        {Playlist.playlists?.map((item, index) => {
           const playlistId = item.id;
+          console.log(Playlist.playlists, item);
           return (
-            <Link
+            <Typography variant="h1"
               key={index}
-              href={`/playlistPage/${playlistId}`}
-              style={{
+              onClick = {()=>handleRoutes(item.name,item.songs)}
+              sx={{
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textDecoration: "none",
                 fontSize: 15,
                 color: colors.greyAccent[800],
-
                 width: "90%",
+                cursor : "pointer",
+                "& : hover" :{color:"black"}
               }}
             >
               <PlayArrowIcon sx={{ position: "relative", top: "6px" }} />{" "}
               {item.name}
-            </Link>
+            </Typography>
           );
         })}
       </Box>

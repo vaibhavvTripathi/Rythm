@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Opacity } from "@mui/icons-material";
 
 const PlayListPage = () => {
-  const { upsertSong, getSong, songArray } = useContext(PlaylistContext);
+
   const [show,setShow] = useState<boolean>(true);
   const router = useRouter();
 

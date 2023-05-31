@@ -9,7 +9,7 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import TrackCard from "@/components/TrackCard";
 import { Box } from "@mui/system";
-import { Typography } from "@mui/material";
+import { Menu, MenuItem, Typography } from "@mui/material";
 import { colors } from "@/theme/AppThemeProvider";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import Circular from "@/components/Circular";
@@ -22,6 +22,7 @@ import recentTracks from "./api/recentTracks";
 import FollowedArtistCard from "@/components/FollowedArtistComponent";
 import { PlaylistContext } from "@/context/PlaylistContext";
 import IndexSkelton from "@/components/skeleton/IndexSkeleton";
+import ListPopup from "@/components/ListPopup";
 
 const inter = Inter({ subsets: ["latin"] });
 type topTrack = {
@@ -57,25 +58,33 @@ export default function Home({ code }: { code: string }) {
   const [newReleases, setNewReleases] = useState([]);
   const [recentPlay, setRecentPlay] = useState([]);
   const [recommendedPlay, setRecommendedPlay] = useState([]);
+  const[selectedSong,setSelectedSong] = useState<string>("");const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>,id:string) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedSong(id);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+ 
+  const[isOpen,setIsOpen] = useState<boolean>(false)
+  const toggle = () => {
+    console.log("hi")
+    setIsOpen(!isOpen)
+    handleClose();
+  }
 
-  // const {getUsersPlaylist} = useContext(PlaylistContext)
+  const getId = (id : string) : void => {
+     setSelectedSong(id);
+     toggle()
+  }
   const router = useRouter();
 
   var currentTime = new Date().getTime();
 
   useEffect(() => {
     const token = Cookies.get("access_token");
-
-    // const getJwt = async () => {
-    //   console.log(token);
-    //   const data: AxiosResponse<{ jwtToken: string; email: string }> =
-    //     await axios.post("/api/userName", {
-    //       token: token,
-    //     });
-    //   const jwt = data.data.jwtToken;
-    //   console.log("my beloved jwt",jwt)
-    //   await getUsersPlaylist(jwt);
-    // };
 
     const getTopTracks = async () => {
       const response = await axios.post("/api/topTracks", {
@@ -120,7 +129,6 @@ export default function Home({ code }: { code: string }) {
     };
     console.log("running/...");
     const stack = async () => {
-      // await getJwt();
       await getTopTracks();
       await getTopArtists();
       await getFollowedArtist();
@@ -274,7 +282,7 @@ export default function Home({ code }: { code: string }) {
           }}
         >
           {recentPlay.map((item: any, index: number) => {
-            return <SongCard prop={item} key={index} />;
+            return <SongCard handleId = {getId} setAcnh= {setAnchorEl} prop={item} key={index} />;
           })}
         </Box>
         <Typography
@@ -348,7 +356,7 @@ export default function Home({ code }: { code: string }) {
           }}
         >
           {recommendedPlay.map((item: any, index: number) => {
-            return <SongCard prop={item} key={index} />;
+            return <SongCard handleId = {getId} toggle= {toggle} prop={item} key={index} />;
           })}
         </Box>
         <Typography
@@ -378,6 +386,27 @@ export default function Home({ code }: { code: string }) {
         >
           - Chat GPT
         </Typography>
+        <ListPopup songId={selectedSong} isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={toggle}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Add to Playlist
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Like this Song
+          </Typography>
+        </MenuItem>
+      </Menu>
       </Box>
     </>
   );

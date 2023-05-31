@@ -8,15 +8,17 @@ import { colors } from "@/theme/AppThemeProvider";
 import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddIcon from "@mui/icons-material/Add";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
 import { motion } from "framer-motion";
 
 
-const SongCard = ({ prop }: { prop: any }) => {
+const SongCard = ({ prop,handleId,setAcnh }: any) => {
   const { setSong } = useContext(WebPlayerContext);
-
+  const handleSet = (id : string,e :React.MouseEvent<HTMLButtonElement>) => {
+    handleId(id);
+  }
   return (
     <>
      <motion.div
@@ -77,8 +79,8 @@ const SongCard = ({ prop }: { prop: any }) => {
             </Link>
           </Box>
           <Box>
-            <IconButton>
-              <MoreVertIcon />
+            <IconButton onClick={(e)=>handleSet(prop.id,e)}>
+              <AddIcon />
             </IconButton>
           </Box>
         </Box>

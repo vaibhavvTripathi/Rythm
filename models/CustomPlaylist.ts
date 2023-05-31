@@ -7,7 +7,7 @@ const customPlaylist = new Schema({
         unique : true,
     },
     playlists : [{
-        type : [
+        type : 
             {id : {
              type : String,
              unique : true,
@@ -17,7 +17,7 @@ const customPlaylist = new Schema({
             ,
              songs : [String]
             }
-        ]
+        
     }]
 })
 

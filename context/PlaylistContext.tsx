@@ -124,6 +124,7 @@ export default function PlaylistContextProvider({
             Authorization : 'Bearer ' + jwt
           }
          })
+         console.log(updatedPlaylists.data)
          setPlaylist(updatedPlaylists.data)
        }
   }

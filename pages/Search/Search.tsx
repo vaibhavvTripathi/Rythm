@@ -13,23 +13,32 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { PlaylistContext } from "@/context/PlaylistContext";
+import ListPopup from "@/components/ListPopup";
 
 const Search = () => {
   const { setSong } = useContext(WebPlayerContext);
   const [searchInput, setSearchInput] = useState<string>("");
+  const[selectedSong,setSelectedSong] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any>([]);
   const [page, setPage] = useState<number>(0);
   const debounceString = useDebounce(searchInput, 500);
-
+  const { addSong } = useContext(PlaylistContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>,id:string) => {
     setAnchorEl(event.currentTarget);
+    setSelectedSong(id);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+ 
+  const[isOpen,setIsOpen] = useState<boolean>(false)
+  const toggle = () => {
+    setIsOpen(!isOpen)
+    handleClose();
+  }
   useEffect(() => {
     const token = Cookies.get("access_token");
     const getSearchedSong = async (query: string): Promise<void> => {
@@ -39,6 +48,7 @@ const Search = () => {
         offset: page,
       });
       setSearchResult(data.data.tracks?.items);
+      console.log(searchResult)
     };
     getSearchedSong(debounceString);
   }, [debounceString, page]);
@@ -100,47 +110,53 @@ const Search = () => {
                 .map((item: any, index: number) => {
                   return item.name;
                 })
-                .toString();
+                .join(", ");
               return (
-                <Card
-                  key={index}
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <img
-                      src={track.album.images[0].url}
-                      style={{
-                        backgroundColor: "grey",
-                        objectFit: "cover",
-                        height: 60,
-                        width: 60,
-                      }}
-                      alt="artist"
-                    />
-                    <Box
-                      style={{ textDecoration: "none", cursor: "pointer" }}
-                      onClick={() => {
-                        setSong(track.preview_url);
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{ fontWeight: 600, color: colors.greyAccent[800] }}
+                <>
+                  <Card
+                    key={index}
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <img
+                        src={track.album.images[0].url}
+                        style={{
+                          backgroundColor: "grey",
+                          objectFit: "cover",
+                          height: 60,
+                          width: 60,
+                        }}
+                        alt="artist"
+                      />
+                      <Box
+                        style={{ textDecoration: "none", cursor: "pointer" }}
+                        onClick={() => {
+                          setSong(track.preview_url);
+                        }}
                       >
-                        {track.name}
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ color: colors.greyAccent[600] }}
-                      >
-                        {artists}
-                      </Typography>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 600,
+                            color: colors.greyAccent[800],
+                          }}
+                        >
+                          {track.name}
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ color: colors.greyAccent[600] }}
+                        >
+                          {artists}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                  <IconButton onClick={(e) => handleClick(e)}>
-                    <MoreVertIcon />
-                  </IconButton>
-                </Card>
+                    <IconButton onClick={(e) => handleClick(e,track.id as string)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Card>
+            
+                </>
               );
             })}
             <Typography
@@ -173,6 +189,7 @@ const Search = () => {
           </>
         )}
       </Container>
+      <ListPopup songId={selectedSong} isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -182,7 +199,7 @@ const Search = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={toggle}>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
             Add to Playlist
           </Typography>

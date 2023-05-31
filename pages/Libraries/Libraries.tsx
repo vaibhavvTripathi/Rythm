@@ -1,22 +1,53 @@
-import React, { useState } from 'react'
-import PlaylistPopup from '@/Layout/PlaylistPopup'
-import { Button } from '@mui/material'
-import ArtistSkeleton from '@/components/skeleton/ArtistSkeleton'
-import AlbumSkeleton from '@/components/skeleton/AlbumSkeleton'
-import IndexSkelton from '@/components/skeleton/IndexSkeleton'
+import React, { useContext, useState } from "react";
+import PlaylistPopup from "@/Layout/PlaylistPopup";
+import { Box, Button, Container, Typography } from "@mui/material";
+import ArtistSkeleton from "@/components/skeleton/ArtistSkeleton";
+import AlbumSkeleton from "@/components/skeleton/AlbumSkeleton";
+import IndexSkelton from "@/components/skeleton/IndexSkeleton";
+import ListPopup from "@/components/ListPopup";
+import PlaylistCard from "@/components/PlaylistCard";
+import { PlaylistContext } from "@/context/PlaylistContext";
+import { colors } from "@/theme/AppThemeProvider";
+import Cookies from "js-cookie";
+
+type PlaylistCardProps = {
+  name: string;
+  totalSongs: number;
+  id: string;
+  songs : Array<string>;
+};
 
 const Libraries = () => {
-  const[isOpen,setIsOpen] = useState<boolean>(false)
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { Playlist } = useContext(PlaylistContext);
+  
   const toggle = () => {
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
   return (
-    <>
-      <PlaylistPopup isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
-      <IndexSkelton/>
-    </>
+    <Container>
+       <Typography variant="h1" sx={{my:3,pb:1,borderBottom:`1px solid ${colors.greyAccent[400]}`,fontWeight:600}}>
+       🎺 Your playlists
+      </Typography>
+      <input
+          className={"customInput"}
+          placeholder="Search Your Playlist Here.."
+          type="text"
+          
+        />
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 ,mx:"auto",my:2}}>
+        {Playlist?.playlists.map((item, index) => {
+          const name = item.name;
+          const totalSongs = item.songs.length;
+          const id = item.id;
+          const songs = item.songs;
+          const obj: PlaylistCardProps = { name, totalSongs, id,songs };
+          return <PlaylistCard metaInfo={obj} key={index} />;
+        })}
+      </Box>
+    </Container>
+  );
+};
 
-  )
-}
-
-export default Libraries
+export default Libraries;
