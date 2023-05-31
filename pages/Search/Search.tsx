@@ -154,7 +154,7 @@ const Search = () => {
                     <IconButton onClick={(e) => handleClick(e,track.id as string)}>
                       <MoreVertIcon />
                     </IconButton>
-                  </Card>
+                  </Card> 
             
                 </>
               );

@@ -20,14 +20,14 @@ const TrackCard = ({name,artist,image,preview,id}:{name:string,artist:string,ima
       <Card
         sx={{
           display: "flex",
-           width: "32%",
-          "&:hover": { transform: "scale(1.01)" },
+           width: "25%",
+          "&:hover": { transform: "scale(1.05)" },
           transition: "all .2s ease-in-out",
         }}
       >
         <CardMedia
           component="img"
-          sx={{ width: 100, height: "100%",backgroundColor:colors.greyAccent[400] }}
+          sx={{ width: 80, height: 80,backgroundColor:colors.greyAccent[400] }}
           image={image}
           alt=""
         />
@@ -40,8 +40,8 @@ const TrackCard = ({name,artist,image,preview,id}:{name:string,artist:string,ima
 
         <IconButton
           sx={{
-            width: 60,
-            height: 60,
+            width: 50,
+            height: 50,
             mr: 1,
           
             my: "auto",

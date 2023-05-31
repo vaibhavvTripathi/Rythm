@@ -61,12 +61,13 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
   
-  const handleRoutes = (name : string,songs : Array<string>) => {
+  const handleRoutes = (name : string,songs : Array<string>,id : string) => {
     router.push(
       {pathname : `/Libraries/${name}`,
        query : {
         token : Cookies.get("access_token"),
-        songs : songs
+        songs : songs,
+        id : id
        }
       }
     )
@@ -187,7 +188,7 @@ const Sidebar = () => {
           return (
             <Typography variant="h1"
               key={index}
-              onClick = {()=>handleRoutes(item.name,item.songs)}
+              onClick = {()=>handleRoutes(item.name,item.songs,item.id)}
               sx={{
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",

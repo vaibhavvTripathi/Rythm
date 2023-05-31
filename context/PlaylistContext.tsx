@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import React, { useEffect } from "react";
 import { createContext, useState } from "react";
 import { CustomPlaylistType, SinglePlaylistModel } from "@/pages/api/dbRoutes/type";
+import { useRouter } from "next/router";
 
  
 const defaultPlaylist : CustomPlaylistType = {
@@ -29,7 +30,7 @@ export default function PlaylistContextProvider({
 }) {
  
   const[Playlist,setPlaylist] = useState<CustomPlaylistType>(defaultPlaylist)
-
+  const router = useRouter();
   const stack = async () => {
     await getJwtToken();
     await getPlaylist();
@@ -72,6 +73,8 @@ export default function PlaylistContextProvider({
             Authorization : 'Bearer ' + jwt
           }
          })
+         console.log("playlist deleted successfully")
+         router.push("/")
          setPlaylist(updatedPlaylists.data)
      }
      catch(err) {
@@ -130,12 +133,14 @@ export default function PlaylistContextProvider({
   }
   const deleteSong = async (songId: string, playlistId: string) => {
     const jwt = Cookies.get("jwtToken");
+    console.log("hoi")
     const playlist  = Playlist.playlists.find((item)=> {
       return playlistId === item.id
     })
+    console.log(playlist)
     if(playlist!==undefined) {
 
-      if(playlist.songs.includes(songId)==true) {
+      if(playlist.songs.includes(songId)==false) {
          return;
       }
       const newSongArray : Array<string> = playlist.songs.filter((item)=> {
@@ -153,7 +158,15 @@ export default function PlaylistContextProvider({
          Authorization : 'Bearer ' + jwt
        }
       })
+      router.push({pathname : `/Libraries/${playlist.name}`,
+      query : {
+       token : Cookies.get("access_token"),
+       songs : newSongArray,
+       id : playlist.id
+      }})
+      console.log(updatedPlaylists.data)
       setPlaylist(updatedPlaylists.data)
+      // location.reload();
     }
   };
  

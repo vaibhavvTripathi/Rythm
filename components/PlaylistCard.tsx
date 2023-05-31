@@ -9,7 +9,7 @@ type PlaylistCardProps = {
     name : string,
     totalSongs : number,
     id : string,
-    songs : Array<string> 
+    songs : string
   }
 
 const PlaylistCard = ({metaInfo}:{metaInfo:PlaylistCardProps}) => {
@@ -22,7 +22,8 @@ const PlaylistCard = ({metaInfo}:{metaInfo:PlaylistCardProps}) => {
           {pathname : `/Libraries/${metaInfo.name}`,
            query : {
             token : Cookies.get("access_token"),
-            songs : metaInfo.songs
+            songs : metaInfo.songs,
+            id : metaInfo.id
            }
           }
         )

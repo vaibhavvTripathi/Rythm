@@ -14,7 +14,7 @@ type PlaylistCardProps = {
   name: string;
   totalSongs: number;
   id: string;
-  songs : Array<string>;
+  songs : string;
 };
 
 const Libraries = () => {
@@ -41,7 +41,7 @@ const Libraries = () => {
           const name = item.name;
           const totalSongs = item.songs.length;
           const id = item.id;
-          const songs = item.songs;
+          const songs = item.songs.join(",");
           const obj: PlaylistCardProps = { name, totalSongs, id,songs };
           return <PlaylistCard metaInfo={obj} key={index} />;
         })}
