@@ -20,6 +20,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { ArtistPageContext } from "@/context/ArtistPageContext";
 import ArtistSkeleton from "@/components/skeleton/ArtistSkeleton";
 import ListPopup from "@/components/ListPopup";
+import { motion } from "framer-motion";
 
 const ArtistPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,26 +30,30 @@ const ArtistPage = () => {
   const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
   const [artistAlbum, setArtistAlbum] = useState([]);
   const { setSong } = useContext(WebPlayerContext);
-  const { isFollowed, checkIsFollowed,followArtist,unFollowArtist} = useContext(ArtistPageContext);
-  const[selectedSong,setSelectedSong] = useState<string>("");
+  const { isFollowed, checkIsFollowed, followArtist, unFollowArtist } =
+    useContext(ArtistPageContext);
+  const [selectedSong, setSelectedSong] = useState<string>("");
   const handleToggle = () => {
     setIsRefreshed((prev) => !prev);
   };
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>,id:string) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
     setAnchorEl(event.currentTarget);
     setSelectedSong(id);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
-  const[isOpen,setIsOpen] = useState<boolean>(false)
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggle = () => {
-    setIsOpen(!isOpen)
+    setIsOpen(!isOpen);
     handleClose();
-  }
+  };
   const router = useRouter();
   const { artistId } = router.query;
   useEffect(() => {
@@ -99,74 +104,86 @@ const ArtistPage = () => {
     };
     stack();
   }, [router]);
-  if (isLoading) return <ArtistSkeleton/>;
+  if (isLoading) return <ArtistSkeleton />;
   return (
     <>
       <Container sx={{}}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          whileHover={{ scale: 1.02 }}
         >
-          <ListPopup songId={selectedSong} isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={toggle}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Add to Playlist
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Like this Song
-          </Typography>
-        </MenuItem>
-      </Menu>
-          <Avatar
-            src={artistData?.images[0].url}
-            sx={{ height: 150, width: 150 }}
-          />
-          {isFollowed ? (
-            <Button
-              sx={{
-                display: "block",
-                mx: "auto",
-                color: colors.greenAccent[500],
-                border: `1px solid ${colors.greenAccent[500]}`,
-                mt: 2,
-                mb: 0,
-                "&:hover": { backgroundColor: "white" },
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <ListPopup
+              songId={selectedSong}
+              isOpen={isOpen}
+              toggle={(newVal: boolean) => setIsOpen(newVal)}
+            />
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
               }}
-              onClick={()=>unFollowArtist(artistId as string)}
             >
-              <Typography variant="h6">FOLLOWING</Typography>
-            </Button>
-          ) : (
-            <Button
-              sx={{
-                display: "block",
-                mx: "auto",
-                color: colors.greenAccent[500],
-                border: `1px solid ${colors.greenAccent[500]}`,
-                mt: 2,
-                mb: 0,
-                "&:hover": { backgroundColor: "white" },
-              }}
-              onClick={()=>followArtist(artistId as string)}
-            >
-              <Typography variant="h6">FOLLOW</Typography>
-            </Button>
-          )}
-        </Box>
+              <MenuItem onClick={toggle}>
+                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  Add to Playlist
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  Like this Song
+                </Typography>
+              </MenuItem>
+            </Menu>
+            <Avatar
+              src={artistData?.images[0].url}
+              sx={{ height: 150, width: 150 }}
+            />
+            {isFollowed ? (
+              <Button
+                sx={{
+                  display: "block",
+                  mx: "auto",
+                  color: colors.greenAccent[500],
+                  border: `1px solid ${colors.greenAccent[500]}`,
+                  mt: 2,
+                  mb: 0,
+                  "&:hover": { backgroundColor: "white" },
+                }}
+                onClick={() => unFollowArtist(artistId as string)}
+              >
+                <Typography variant="h6">FOLLOWING</Typography>
+              </Button>
+            ) : (
+              <Button
+                sx={{
+                  display: "block",
+                  mx: "auto",
+                  color: colors.greenAccent[500],
+                  border: `1px solid ${colors.greenAccent[500]}`,
+                  mt: 2,
+                  mb: 0,
+                  "&:hover": { backgroundColor: "white" },
+                }}
+                onClick={() => followArtist(artistId as string)}
+              >
+                <Typography variant="h6">FOLLOW</Typography>
+              </Button>
+            )}
+          </Box>
+        </motion.div>
+
         <Typography
           variant="h4"
           sx={{ mt: 2, fontWeight: 600, textAlign: "center" }}
@@ -238,45 +255,54 @@ const ArtistPage = () => {
               })
               .toString();
             return (
-              <Card
+              <motion.div
+                initial={{ opacity: 0, x: 50, y: 10 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{
+                  duration: "0.125",
+                }}
+                whileHover={{ scale: 1.03 }}
                 key={index}
-                sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <img
-                    src={track.album.images[0].url}
-                    style={{
-                      backgroundColor: "grey",
-                      objectFit: "cover",
-                      height: 60,
-                      width: 60,
-                    }}
-                    alt="artist"
-                  />
-                  <Box
-                    style={{ textDecoration: "none", cursor: "pointer" }}
-                    onClick={() => {
-                      setSong(track.preview_url);
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{ fontWeight: 600, color: colors.greyAccent[800] }}
+                <Card sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <img
+                      src={track.album.images[0].url}
+                      style={{
+                        backgroundColor: "grey",
+                        objectFit: "cover",
+                        height: 60,
+                        width: 60,
+                      }}
+                      alt="artist"
+                    />
+                    <Box
+                      style={{ textDecoration: "none", cursor: "pointer" }}
+                      onClick={() => {
+                        setSong(track.preview_url);
+                      }}
                     >
-                      {track.name}
-                    </Typography>
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ color: colors.greyAccent[600] }}
-                    >
-                      {artists}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: colors.greyAccent[800] }}
+                      >
+                        {track.name}
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ color: colors.greyAccent[600] }}
+                      >
+                        {artists}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-                <IconButton onClick={(e) => handleClick(e,track.id as string)}>
-                  <MoreVertIcon />
-                </IconButton>
-              </Card>
+                  <IconButton
+                    onClick={(e) => handleClick(e, track.id as string)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Card>
+              </motion.div>
             );
           })}
         </Box>
@@ -286,56 +312,72 @@ const ArtistPage = () => {
         >
           💽 Albums
         </Typography>
-        <Box
-          sx={{
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": {
-              height: 0,
-            },
 
-            width: "100%",
-            mx: "auto",
-            p: 1,
-            borderRadius: "10px",
-            border: `1px solid ${colors.greyAccent[400]}`,
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          whileHover={{ scale: 1.02 }}
         >
-          {artistAlbum.map((item: any, index: number) => {
-            return <AlbumCard prop={item} key={index} />;
-          })}
-        </Box>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              whiteSpace: "nowrap",
+              "&::-webkit-scrollbar": {
+                height: 0,
+              },
+
+              width: "100%",
+              mx: "auto",
+              p: 1,
+              borderRadius: "10px",
+              border: `1px solid ${colors.greyAccent[400]}`,
+            }}
+          >
+            {artistAlbum.map((item: any, index: number) => {
+              return <AlbumCard prop={item} key={index} />;
+            })}
+          </Box>
+        </motion.div>
+
         <Typography
           variant="h3"
           sx={{ color: colors.primary[700], fontWeight: 700, mt: 4, mb: 2 }}
         >
           👪 Related Artists
         </Typography>
-        <Box
-          sx={{
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": {
-              height: 0,
-            },
-
-            width: "100%",
-            mx: "auto",
-            p: 1,
-            borderRadius: "10px",
-            border: `1px solid ${colors.greyAccent[400]}`,
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          whileHover={{ scale: 1.02 }}
         >
-          {releatedArtistData.map((item, index) => {
-            return (
-              <RelatedArtistCard
-                // refreshFunction={handleToggle}
-                item={item}
-                key={index}
-              />
-            );
-          })}
-        </Box>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              whiteSpace: "nowrap",
+              "&::-webkit-scrollbar": {
+                height: 0,
+              },
+
+              width: "100%",
+              mx: "auto",
+              p: 1,
+              borderRadius: "10px",
+              border: `1px solid ${colors.greyAccent[400]}`,
+            }}
+          >
+            {releatedArtistData.map((item, index) => {
+              return (
+                <RelatedArtistCard
+                  // refreshFunction={handleToggle}
+                  item={item}
+                  key={index}
+                />
+              );
+            })}
+          </Box>
+        </motion.div>
       </Container>
     </>
   );

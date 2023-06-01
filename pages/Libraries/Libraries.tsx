@@ -21,7 +21,7 @@ const Libraries = () => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { Playlist } = useContext(PlaylistContext);
-  
+  const[inputSearch, setInputSearch] = useState<string>("")
   const toggle = () => {
     setIsOpen(!isOpen);
   };
@@ -34,10 +34,11 @@ const Libraries = () => {
           className={"customInput"}
           placeholder="Search Your Playlist Here.."
           type="text"
-          
+          value={inputSearch}
+          onChange={(e)=>setInputSearch(e.target.value)}
         />
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 ,mx:"auto",my:2}}>
-        {Playlist?.playlists.map((item, index) => {
+        {Playlist?.playlists.filter((item,index)=>item.name.includes(inputSearch)).map((item, index) => {
           const name = item.name;
           const totalSongs = item.songs.length;
           const id = item.id;

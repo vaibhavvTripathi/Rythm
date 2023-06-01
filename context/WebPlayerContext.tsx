@@ -11,6 +11,7 @@ export const WebPlayerContext = createContext({
 export default function WebPlayerProvider({children}:{ children: React.ReactNode }) {
       
   const [currSong,setCurrSong] = useState<string>("");
+  const [currImg,setCurrImg] = useState<string>("");
 
   function setSong(newSongLink: string) : void {
        setCurrSong(newSongLink);

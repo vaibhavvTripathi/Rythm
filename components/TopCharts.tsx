@@ -7,7 +7,8 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { useRouter } from "next/router";
-import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
+import { motion } from "framer-motion";
 
 const TopCharts = ({ prop }: { prop: any }) => {
   const name = prop.artists
@@ -15,7 +16,7 @@ const TopCharts = ({ prop }: { prop: any }) => {
       return item.name;
     })
     .toString();
-    const router = useRouter();
+  const router = useRouter();
   return (
     <>
       <Box
@@ -71,7 +72,7 @@ const TopCharts = ({ prop }: { prop: any }) => {
               Total Tracks : {prop.totalTracks}
             </Typography>
           </Box>
-          <Box sx={{mt:2}}>
+          <Box sx={{ mt: 2 }}>
             <IconButton
               sx={{
                 height: 50,
@@ -81,12 +82,12 @@ const TopCharts = ({ prop }: { prop: any }) => {
                 "&:hover": { background: colors.secondary[500] },
                 color: "white",
               }}
-              onClick={()=> router.push(`/AlbumPage/${prop.id}`)}
+              onClick={() => router.push(`/AlbumPage/${prop.id}`)}
             >
               <DoubleArrowIcon />
             </IconButton>
-            <IconButton >
-              <MoreVertIcon  />
+            <IconButton>
+              <MoreVertIcon />
             </IconButton>
           </Box>
         </Box>

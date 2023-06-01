@@ -60,19 +60,18 @@ const Sidebar = () => {
   const toggle = () => {
     setIsOpen(!isOpen);
   };
-  
-  const handleRoutes = (name : string,songs : Array<string>,id : string) => {
-    router.push(
-      {pathname : `/Libraries/${name}`,
-       query : {
-        token : Cookies.get("access_token"),
-        songs : songs,
-        id : id
-       }
-      }
-    )
-}
-  
+
+  const handleRoutes = (name: string, songs: Array<string>, id: string) => {
+    router.push({
+      pathname: `/Libraries/${name}`,
+      query: {
+        token: Cookies.get("access_token"),
+        songs: songs,
+        id: id,
+      },
+    });
+  };
+
   useEffect(() => {
     const path = router.pathname;
     if (path === "/Libraries/Libraries") {
@@ -113,27 +112,35 @@ const Sidebar = () => {
       <Box sx={{ ml: 1, display: "flex", flexDirection: "column", gap: 1 }}>
         {routes.map((item, index) => {
           return (
-            <Box key={index}>
-              <Link
-                href={item.path}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                  textDecoration: "none",
-                  fontSize: 20,
-                  color: "black",
-                  fontWeight: 600,
-                  borderRight: index === currentTab ? "4px solid black" : "",
-                  borderBottom: "1px solid #d6d6d6",
-                  paddingTop: "5px",
-                  paddingBottom: "5px",
-                  borderRadius: "5px",
-                }}
-              >
-                {item.icon} {!mobile && item.name}
-              </Link>
-            </Box>
+            <motion.div
+              initial={{ scale:0 }}
+              transition={{ duration: "0.5" }}
+              whileInView={{ scale:1 }}
+              whileHover={{ scale: 1.02 }}
+              key={index}
+            >
+              <Box>
+                <Link
+                  href={item.path}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                    textDecoration: "none",
+                    fontSize: 20,
+                    color: "black",
+                    fontWeight: 600,
+                    borderRight: index === currentTab ? "4px solid black" : "",
+                    borderBottom: "1px solid #d6d6d6",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                    borderRadius: "5px",
+                  }}
+                >
+                  {item.icon} {!mobile && item.name}
+                </Link>
+              </Box>
+            </motion.div>
           );
         })}
         <Box
@@ -186,9 +193,10 @@ const Sidebar = () => {
           const playlistId = item.id;
           console.log(Playlist.playlists, item);
           return (
-            <Typography variant="h1"
+            <Typography
+              variant="h1"
               key={index}
-              onClick = {()=>handleRoutes(item.name,item.songs,item.id)}
+              onClick={() => handleRoutes(item.name, item.songs, item.id)}
               sx={{
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
@@ -197,8 +205,8 @@ const Sidebar = () => {
                 fontSize: 15,
                 color: colors.greyAccent[800],
                 width: "90%",
-                cursor : "pointer",
-                "& : hover" :{color:"black"}
+                cursor: "pointer",
+                "& : hover": { color: "black" },
               }}
             >
               <PlayArrowIcon sx={{ position: "relative", top: "6px" }} />{" "}

@@ -23,14 +23,15 @@ import FollowedArtistCard from "@/components/FollowedArtistComponent";
 import { PlaylistContext } from "@/context/PlaylistContext";
 import IndexSkelton from "@/components/skeleton/IndexSkeleton";
 import ListPopup from "@/components/ListPopup";
+import { motion } from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"] });
 type topTrack = {
   name: string;
   artists: string;
   image: string;
-  preview : string;
-  id : string;
+  preview: string;
+  id: string;
 };
 
 type topArtists = {
@@ -58,27 +59,31 @@ export default function Home({ code }: { code: string }) {
   const [newReleases, setNewReleases] = useState([]);
   const [recentPlay, setRecentPlay] = useState([]);
   const [recommendedPlay, setRecommendedPlay] = useState([]);
-  const[selectedSong,setSelectedSong] = useState<string>("");const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedSong, setSelectedSong] = useState<string>("");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>,id:string) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
     setAnchorEl(event.currentTarget);
     setSelectedSong(id);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
-  const[isOpen,setIsOpen] = useState<boolean>(false)
-  const toggle = () => {
-    console.log("hi")
-    setIsOpen(!isOpen)
-    handleClose();
-  }
 
-  const getId = (id : string) : void => {
-     setSelectedSong(id);
-     toggle()
-  }
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const toggle = () => {
+    console.log("hi");
+    setIsOpen(!isOpen);
+    handleClose();
+  };
+
+  const getId = (id: string): void => {
+    setSelectedSong(id);
+    toggle();
+  };
   const router = useRouter();
 
   var currentTime = new Date().getTime();
@@ -90,7 +95,7 @@ export default function Home({ code }: { code: string }) {
       const response = await axios.post("/api/topTracks", {
         token,
       });
-      console.log(response.data)
+      console.log(response.data);
       setTracksArray(response.data);
     };
     const getTopArtists = async () => {
@@ -141,7 +146,7 @@ export default function Home({ code }: { code: string }) {
     stack();
   }, []);
 
-  if (loading) return <IndexSkelton/>;
+  if (loading) return <IndexSkelton />;
 
   return (
     <>
@@ -166,7 +171,14 @@ export default function Home({ code }: { code: string }) {
           />
           Latest Releases 🤰
         </Typography>
-        <TopChartCarousel props={newReleases} />
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+        >
+          <TopChartCarousel props={newReleases} />
+        </motion.div>
+
         <Typography
           variant="h3"
           sx={{
@@ -188,30 +200,36 @@ export default function Home({ code }: { code: string }) {
           />
           Your most listened tracks 🎧
         </Typography>
-
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-evenly",
-            columnGap: 1,
-            rowGap: 2,
-            mr: 4,
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
         >
-          {topTracksArray.map((item: topTrack, index: number) => {
-            return (
-              <TrackCard
-                key={index}
-                name={item.name}
-                artist={item.artists}
-                image={item.image}
-                preview = {item.preview}
-                id = {item.id}
-              />
-            );
-          })}
-        </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-evenly",
+              columnGap: 1,
+              rowGap: 2,
+              mr: 4,
+            }}
+          >
+            {topTracksArray.map((item: topTrack, index: number) => {
+              return (
+                <TrackCard
+                  key={index}
+                  name={item.name}
+                  artist={item.artists}
+                  image={item.image}
+                  preview={item.preview}
+                  id={item.id}
+                />
+              );
+            })}
+          </Box>
+        </motion.div>
+
         <Typography
           variant="h3"
           sx={{
@@ -233,21 +251,27 @@ export default function Home({ code }: { code: string }) {
           />
           Followed Artists 👓
         </Typography>
-        <Box
-          sx={{
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": {
-              height: 0,
-            },
-            width: "85vw",
-            mx:"auto"
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
         >
-          {followedArtists.map((item, index) => {
-            return <FollowedArtistCard item={item} key={index} />;
-          })}
-        </Box>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              whiteSpace: "nowrap",
+              "&::-webkit-scrollbar": {
+                height: 0,
+              },
+              width: "85vw",
+              mx: "auto",
+            }}
+          >
+            {followedArtists.map((item, index) => {
+              return <FollowedArtistCard item={item} key={index} />;
+            })}
+          </Box>
+        </motion.div>
 
         <Typography
           variant="h3"
@@ -270,21 +294,35 @@ export default function Home({ code }: { code: string }) {
           />
           Recently Listened Tracks 🚶‍♂️
         </Typography>
-        <Box
-          sx={{
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": {
-              height: 0,
-            },
-            width: "85vw",
-            mx:"auto"
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
         >
-          {recentPlay.map((item: any, index: number) => {
-            return <SongCard handleId = {getId} setAcnh= {setAnchorEl} prop={item} key={index} />;
-          })}
-        </Box>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              whiteSpace: "nowrap",
+              "&::-webkit-scrollbar": {
+                height: 0,
+              },
+              width: "85vw",
+              mx: "auto",
+            }}
+          >
+            {recentPlay.map((item: any, index: number) => {
+              return (
+                <SongCard
+                  handleId={getId}
+                  setAcnh={setAnchorEl}
+                  prop={item}
+                  key={index}
+                />
+              );
+            })}
+          </Box>
+        </motion.div>
+
         <Typography
           variant="h3"
           sx={{
@@ -306,22 +344,28 @@ export default function Home({ code }: { code: string }) {
           />
           Most visited artists 🤓
         </Typography>
-        <Box
-          sx={{
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": {
-              height: 0,
-            },
-
-            width: "85vw",
-            mx:"auto"
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
         >
-          {topArtists.map((item, index) => {
-            return <ArtistCard item={item} key={index} />;
-          })}
-        </Box>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              whiteSpace: "nowrap",
+              "&::-webkit-scrollbar": {
+                height: 0,
+              },
+
+              width: "85vw",
+              mx: "auto",
+            }}
+          >
+            {topArtists.map((item, index) => {
+              return <ArtistCard item={item} key={index} />;
+            })}
+          </Box>
+        </motion.div>
 
         <Typography
           variant="h3"
@@ -344,21 +388,35 @@ export default function Home({ code }: { code: string }) {
           />
           Hot Tracks 🔥
         </Typography>
-        <Box
-          sx={{
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": {
-              height: 0,
-            },
-            width: "85vw",
-            mx:"auto"
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          transition={{ duration: "0.125" }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
         >
-          {recommendedPlay.map((item: any, index: number) => {
-            return <SongCard handleId = {getId} toggle= {toggle} prop={item} key={index} />;
-          })}
-        </Box>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              whiteSpace: "nowrap",
+              "&::-webkit-scrollbar": {
+                height: 0,
+              },
+              width: "85vw",
+              mx: "auto",
+            }}
+          >
+            {recommendedPlay.map((item: any, index: number) => {
+              return (
+                <SongCard
+                  handleId={getId}
+                  toggle={toggle}
+                  prop={item}
+                  key={index}
+                />
+              );
+            })}
+          </Box>
+        </motion.div>
+
         <Typography
           variant="h5"
           sx={{
@@ -386,27 +444,31 @@ export default function Home({ code }: { code: string }) {
         >
           - Chat GPT
         </Typography>
-        <ListPopup songId={selectedSong} isOpen={isOpen} toggle={(newVal:boolean)=>setIsOpen(newVal)}/>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={toggle}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Add to Playlist
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Like this Song
-          </Typography>
-        </MenuItem>
-      </Menu>
+        <ListPopup
+          songId={selectedSong}
+          isOpen={isOpen}
+          toggle={(newVal: boolean) => setIsOpen(newVal)}
+        />
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={toggle}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Add to Playlist
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Like this Song
+            </Typography>
+          </MenuItem>
+        </Menu>
       </Box>
     </>
   );

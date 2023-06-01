@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { GetServerSidePropsContext } from "next";
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import {
   Box,
   Card,
@@ -17,30 +17,30 @@ import { WebPlayerContext } from "@/context/WebPlayerContext";
 import { colors } from "@/theme/AppThemeProvider";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { PlaylistContext } from "@/context/PlaylistContext";
+import { AnimatePresence, motion } from "framer-motion";
 
 const SinglePlaylist = (props: any) => {
   const router = useRouter();
   const { setSong } = useContext(WebPlayerContext);
   const tracks = props.tracks;
-  const { Playlist,deletePlaylist,deleteSong } = useContext(PlaylistContext);
+  const { Playlist, deletePlaylist, deleteSong } = useContext(PlaylistContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("toggle")
+    console.log("toggle");
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
   console.log(props.id);
-  const playlistId = router.query.id as string
+  const playlistId = router.query.id as string;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggle = () => {
     setIsOpen(!isOpen);
     console.log(props.id);
     deletePlaylist(playlistId);
     handleClose();
-    
   };
 
   if (
@@ -51,7 +51,7 @@ const SinglePlaylist = (props: any) => {
   ) {
     return (
       <>
-        <Box sx={{ display: "flex", }}>
+        <Box sx={{ display: "flex" }}>
           <Typography
             variant="h2"
             sx={{
@@ -61,12 +61,13 @@ const SinglePlaylist = (props: any) => {
               pb: 1,
               width: "fit-content",
               mx: "auto",
-              borderBottom : `1px solid ${colors.greyAccent[400]}`
             }}
           >
             🎵 {router.query.playlistid}
-           
           </Typography>
+          <IconButton onClick={(e) => handleClick(e)}>
+            <MoreVertIcon sx={{ fontSize: "1.5em" }} />
+          </IconButton>
         </Box>
         <Typography
           variant="h4"
@@ -74,13 +75,28 @@ const SinglePlaylist = (props: any) => {
         >
           {"No songs available :("}{" "}
         </Typography>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={toggle}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Delete this playlist
+            </Typography>
+          </MenuItem>
+        </Menu>
       </>
     );
   }
   return (
     <>
       <Container>
-        <Box sx={{ display: "flex", }}>
+        <Box sx={{ display: "flex" }}>
           <Typography
             variant="h2"
             sx={{
@@ -93,20 +109,27 @@ const SinglePlaylist = (props: any) => {
             }}
           >
             🎵 {router.query.playlistid}
-         
           </Typography>
           <IconButton onClick={(e) => handleClick(e)}>
-              <MoreVertIcon sx={{ fontSize: "1.5em" }} />
-            </IconButton>
+            <MoreVertIcon sx={{ fontSize: "1.5em" }} />
+          </IconButton>
         </Box>
 
         {tracks && (
-          <Typography
-            variant="h4"
-            sx={{ color: colors.greyAccent[700], mb: 2 }}
+          <motion.div
+            initial={{ opacity: 0, x: 50, y: 10 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{
+              duration: "0.5",
+            }}
           >
-            List of songs :
-          </Typography>
+            <Typography
+              variant="h4"
+              sx={{ color: colors.greyAccent[700], mb: 2 }}
+            >
+              List of songs :
+            </Typography>
+          </motion.div>
         )}
 
         {tracks?.map((item: any, index: number) => {
@@ -116,48 +139,62 @@ const SinglePlaylist = (props: any) => {
             })
             .join(", ");
           return (
-            <Card
-              key={index}
-              sx={{ display: "flex", justifyContent: "space-between", my: 1 }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <img
-                  src={item.album.images[0].url}
-                  style={{
-                    backgroundColor: "grey",
-                    objectFit: "cover",
-                    height: 60,
-                    width: 60,
-                  }}
-                  alt="artist"
-                />
-                <Box
-                  style={{ textDecoration: "none", cursor: "pointer" }}
-                  onClick={() => {
-                    setSong(item.preview_url);
+            <AnimatePresence key={index}>
+              <motion.div
+                initial={{ opacity: 0, x: 50, y: 50 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{
+                  duration: "0.125",
+                }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <Card
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    my: 1,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 600,
-                      color: colors.greyAccent[800],
-                    }}
-                  >
-                    {item.name}
-                  </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ color: colors.greyAccent[600] }}
-                  >
-                    {artists}
-                  </Typography>
-                </Box>
-              </Box>
-              <IconButton onClick={()=>deleteSong(item.id,playlistId)}>
-                <RemoveCircleOutlineIcon />
-              </IconButton>
-            </Card>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <img
+                      src={item.album.images[0].url}
+                      style={{
+                        backgroundColor: "grey",
+                        objectFit: "cover",
+                        height: 60,
+                        width: 60,
+                      }}
+                      alt="artist"
+                    />
+                    <Box
+                      style={{ textDecoration: "none", cursor: "pointer" }}
+                      onClick={() => {
+                        setSong(item.preview_url);
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          color: colors.greyAccent[800],
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ color: colors.greyAccent[600] }}
+                      >
+                        {artists}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <IconButton onClick={() => deleteSong(item.id, playlistId)}>
+                    <RemoveCircleOutlineIcon />
+                  </IconButton>
+                </Card>
+              </motion.div>
+            </AnimatePresence>
           );
         })}
         <Typography

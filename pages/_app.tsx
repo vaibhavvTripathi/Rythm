@@ -10,6 +10,7 @@ import { GetServerSideProps } from "next";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Head from "next/head";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function App({ Component, pageProps }: AppProps) {
   let [code, setCode] = useState<string | null>(null);
@@ -26,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setAct(Cookies.get("access_token"));
         setCode(code);
       });
-      console.log("hi app")
+    console.log("hi app");
   }, []);
   useEffect(() => {
     setAct(Cookies.get("access_token"));
