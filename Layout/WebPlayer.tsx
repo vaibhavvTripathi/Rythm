@@ -1,12 +1,13 @@
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import React, { useContext, useEffect, useRef } from "react";
 import SpotifyPlayer from "react-spotify-web-playback";
 import Cookies from "js-cookie";
 import { WebPlayerContext } from "@/context/WebPlayerContext";
 import CircularIndeterminate from "@/components/Circular";
+import { colors } from "@/theme/AppThemeProvider";
 
 const WebPlayer = () => {
-  const { currSong } = useContext(WebPlayerContext);
+  const { currSong,currImg,currSongTitle} = useContext(WebPlayerContext);
   console.log("inside webplayer", currSong);
   const webplayerStyles = {
     width: "100%",
@@ -24,14 +25,17 @@ const WebPlayer = () => {
       audioRef.current.play();
     }
   }, [currSong]);
-  if (currSong === "") {
-    <Paper variant="outlined" sx={{ padding: 0 }}>
-      <audio style={webplayerStyles} controls />
-    </Paper>;
-  }
+ console.log("rererererere",currImg)
   return (
-    <Paper variant="outlined" sx={{ padding: 0 }}>
-      <audio ref={audioRef} src={currSong} style={webplayerStyles} controls />
+    <Paper variant="outlined" sx={{ padding: 0,display:"flex",alignItems:"center" }}>
+      <img src={(currImg==""? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Solid_grey.svg/2048px-Solid_grey.svg.png":currImg)} style={{width:100,height:80,borderRadius:"2px"}} alt="" />
+      <Box sx={{width:"100%"}}>
+       <Typography variant="h5" sx={{fontWeight:600,ml:3,mt:1,color:colors.greyAccent[800]}}>
+         {currSongTitle===""?"--Select the song--":currSongTitle}
+       </Typography>
+       <audio ref={audioRef} src={currSong} style={webplayerStyles} controls />
+      </Box>
+   
     </Paper>
   );
 };

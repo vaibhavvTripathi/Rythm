@@ -147,7 +147,7 @@ const Search = () => {
                         <Box
                           style={{ textDecoration: "none", cursor: "pointer" }}
                           onClick={() => {
-                            setSong(track.preview_url);
+                            setSong(track.preview_url,track.album.images[0].url,track.name);
                           }}
                         >
                           <Typography

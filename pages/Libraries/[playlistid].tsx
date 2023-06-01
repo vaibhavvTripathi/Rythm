@@ -51,30 +51,40 @@ const SinglePlaylist = (props: any) => {
   ) {
     return (
       <>
-        <Box sx={{ display: "flex" }}>
-          <Typography
-            variant="h2"
-            sx={{
-              my: 3,
-              fontWeight: 600,
-              textAlign: "center",
-              pb: 1,
-              width: "fit-content",
-              mx: "auto",
-            }}
-          >
-            🎵 {router.query.playlistid}
-          </Typography>
-          <IconButton onClick={(e) => handleClick(e)}>
-            <MoreVertIcon sx={{ fontSize: "1.5em" }} />
-          </IconButton>
-        </Box>
-        <Typography
-          variant="h4"
-          sx={{ color: colors.greyAccent[700], my: 2, textAlign: "center" }}
+        <motion.div
+          initial={{ opacity: 0, x: 50, y: 50 }}
+          animate={{ opacity: 1, x: 0, y: 0 }}
+          transition={{
+            duration: "0.125",
+          }}
+          whileHover={{ scale: 1.02 }}
         >
-          {"No songs available :("}{" "}
-        </Typography>
+          <Box sx={{ display: "flex" }}>
+            <Typography
+              variant="h2"
+              sx={{
+                my: 3,
+                fontWeight: 600,
+                textAlign: "center",
+                pb: 1,
+                width: "fit-content",
+                mx: "auto",
+              }}
+            >
+              🎵 {router.query.playlistid}
+            </Typography>
+            <IconButton onClick={(e) => handleClick(e)}>
+              <MoreVertIcon sx={{ fontSize: "1.5em" }} />
+            </IconButton>
+          </Box>
+          <Typography
+            variant="h4"
+            sx={{ color: colors.greyAccent[700], my: 2, textAlign: "center" }}
+          >
+            {"No songs available :("}{" "}
+          </Typography>
+        </motion.div>
+
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}
@@ -96,24 +106,33 @@ const SinglePlaylist = (props: any) => {
   return (
     <>
       <Container>
-        <Box sx={{ display: "flex" }}>
-          <Typography
-            variant="h2"
-            sx={{
-              my: 3,
-              fontWeight: 600,
-              textAlign: "center",
-              pb: 1,
-              width: "fit-content",
-              mx: "auto",
-            }}
-          >
-            🎵 {router.query.playlistid}
-          </Typography>
-          <IconButton onClick={(e) => handleClick(e)}>
-            <MoreVertIcon sx={{ fontSize: "1.5em" }} />
-          </IconButton>
-        </Box>
+        <motion.div
+          initial={{ opacity: 0, x: 50, y: 50 }}
+          animate={{ opacity: 1, x: 0, y: 0 }}
+          transition={{
+            duration: "0.125",
+          }}
+          whileHover={{ scale: 1.02 }}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Typography
+              variant="h2"
+              sx={{
+                my: 3,
+                fontWeight: 600,
+                textAlign: "center",
+                pb: 1,
+                width: "fit-content",
+                mx: "auto",
+              }}
+            >
+              🎵 {router.query.playlistid}
+            </Typography>
+            <IconButton onClick={(e) => handleClick(e)}>
+              <MoreVertIcon sx={{ fontSize: "1.5em" }} />
+            </IconButton>
+          </Box>
+        </motion.div>
 
         {tracks && (
           <motion.div
@@ -169,7 +188,11 @@ const SinglePlaylist = (props: any) => {
                     <Box
                       style={{ textDecoration: "none", cursor: "pointer" }}
                       onClick={() => {
-                        setSong(item.preview_url);
+                        setSong(
+                          item.preview_url,
+                          item.album.images[0].url,
+                          item.name
+                        );
                       }}
                     >
                       <Typography

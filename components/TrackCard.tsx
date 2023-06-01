@@ -24,7 +24,7 @@ const TrackCard = ({
 
   const handlePlay = () => {
     console.log("hi");
-    setSong(preview);
+    setSong(preview,image,name);
   };
   return (
     <>
