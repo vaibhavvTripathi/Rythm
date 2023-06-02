@@ -140,11 +140,6 @@ const ArtistPage = () => {
                   Add to Playlist
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                  Like this Song
-                </Typography>
-              </MenuItem>
             </Menu>
             <Avatar
               src={artistData?.images[0].url}
@@ -279,7 +274,7 @@ const ArtistPage = () => {
                     <Box
                       style={{ textDecoration: "none", cursor: "pointer" }}
                       onClick={() => {
-                        setSong(track.preview_url,track.album.images[0].url,track.name);
+                        setSong(track.preview_url,track.album.images[0].url,track.name,artists);
                       }}
                     >
                       <Typography

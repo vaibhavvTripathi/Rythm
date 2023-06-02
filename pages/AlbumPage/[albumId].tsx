@@ -100,11 +100,6 @@ const AlbumPage = () => {
               Add to Playlist
             </Typography>
           </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
-              Like this Song
-            </Typography>
-          </MenuItem>
         </Menu>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -227,7 +222,7 @@ const AlbumPage = () => {
                     <Box
                       style={{ textDecoration: "none", cursor: "pointer" }}
                       onClick={() => {
-                        setSong(track.preview_url,albumObj.images[0].url,track.name);
+                        setSong(track.preview_url,albumObj.images[0].url,track.name,artists);
                       }}
                     >
                       <Typography

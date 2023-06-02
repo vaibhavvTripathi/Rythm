@@ -191,7 +191,7 @@ const SinglePlaylist = (props: any) => {
                         setSong(
                           item.preview_url,
                           item.album.images[0].url,
-                          item.name
+                          item.name,artists
                         );
                       }}
                     >

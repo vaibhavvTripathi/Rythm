@@ -16,10 +16,12 @@ import MenuItem from "@mui/material/MenuItem";
 import { PlaylistContext } from "@/context/PlaylistContext";
 import ListPopup from "@/components/ListPopup";
 import { motion } from "framer-motion";
+import SearchSkeleton from "@/components/skeleton/SearchSkeleton";
 
 const Search = () => {
   const { setSong } = useContext(WebPlayerContext);
   const [searchInput, setSearchInput] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any>([]);
   const [page, setPage] = useState<number>(0);
@@ -43,11 +45,15 @@ const Search = () => {
     setIsOpen(!isOpen);
     handleClose();
   };
+  console.log(loading);
   useEffect(() => {
     const token = Cookies.get("access_token");
+    setLoading(true);
     const getSearchedSong = async (query: string): Promise<void> => {
       if (query === "") {
+        setLoading(false);
         setSearchResult(undefined);
+
         return;
       }
       const data = await axios.post("../api/search/getSearchedItem", {
@@ -56,6 +62,7 @@ const Search = () => {
         offset: page,
       });
       setSearchResult(data.data.tracks?.items);
+      setLoading(false);
       console.log(searchResult);
     };
     getSearchedSong(debounceString);
@@ -69,6 +76,33 @@ const Search = () => {
   const handlePageChangeBackWards = () => {
     if (page >= 10) setPage((prev) => prev - 10);
   };
+  if (loading) {
+    return (
+      <Container>
+        <Typography
+          variant="h2"
+          sx={{ fontWeight: 600, color: colors.primary[700], my: 1 }}
+        >
+          🕵️‍♂️ Search Your Favourite Music Here ...
+        </Typography>
+        <input
+          className={"customInput"}
+          placeholder="Search Your Music Here.."
+          type="text"
+          value={searchInput}
+          onChange={handleSearch}
+        />
+        <Typography
+          variant="h5"
+          sx={{ color: colors.greyAccent[600], my: 2, ml: 1, mb: 2 }}
+        >
+          {" "}
+          Search Results for {debounceString} :
+        </Typography>
+        <SearchSkeleton />
+      </Container>
+    );
+  }
   return (
     <>
       <Container sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -125,7 +159,7 @@ const Search = () => {
                     initial={{ opacity: 0, y: 50 }}
                     transition={{ duration: "0.125" }}
                     whileInView={{ opacity: 1, x: 0, y: 0 }}
-                    whileHover={{scale:1.02}}
+                    whileHover={{ scale: 1.02 }}
                   >
                     <Card
                       key={index}
@@ -147,7 +181,12 @@ const Search = () => {
                         <Box
                           style={{ textDecoration: "none", cursor: "pointer" }}
                           onClick={() => {
-                            setSong(track.preview_url,track.album.images[0].url,track.name);
+                            setSong(
+                              track.preview_url,
+                              track.album.images[0].url,
+                              track.name,
+                              artists
+                            );
                           }}
                         >
                           <Typography
@@ -224,11 +263,6 @@ const Search = () => {
         <MenuItem onClick={toggle}>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
             Add to Playlist
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Like this Song
           </Typography>
         </MenuItem>
       </Menu>

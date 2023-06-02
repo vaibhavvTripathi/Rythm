@@ -7,7 +7,8 @@ export const WebPlayerContext = createContext({
   currSong: "",
   currImg : "", 
   currSongTitle : "",
-  setSong : (newSongLink : string,newImg : string,newSongTitle : string)=> {}
+  currArtist : "",
+  setSong : (newSongLink : string,newImg : string,newSongTitle : string,newArtist:string)=> {}
 });
 
 export default function WebPlayerProvider({children}:{ children: React.ReactNode }) {
@@ -15,8 +16,8 @@ export default function WebPlayerProvider({children}:{ children: React.ReactNode
   const [currSong,setCurrSong] = useState<string>("");
   const [currImg,setCurrImg] = useState<string>("");
   const [currTitle,setCurrTitle] = useState<string>("");
-
-  function setSong(newSongLink: string,newImg : string,newSongTitle: string) : void {
+  const [currArtist, setCurrArtist] = useState<string>("")
+  function setSong(newSongLink: string,newImg : string,newSongTitle: string,newArtist : string) : void {
       if(newSongLink===null || undefined || "") {
         alert("Song for this link is not provided by Spotify Api")
         return;
@@ -24,11 +25,13 @@ export default function WebPlayerProvider({children}:{ children: React.ReactNode
        setCurrSong(newSongLink);
        setCurrImg(newImg);
        setCurrTitle(newSongTitle);
+       setCurrArtist(newArtist);
   } 
   const contextVal = {
     currSong : currSong,
     currImg : currImg,
     currSongTitle : currTitle,
+    currArtist : currArtist,
     setSong : setSong
   }
   return (

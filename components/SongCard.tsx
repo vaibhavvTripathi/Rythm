@@ -50,7 +50,7 @@ const SongCard = ({ prop,handleId,setAcnh }: any) => {
           }}
         >
           <Box>
-            <Link href={""} style={{ textDecoration: "none", color: "black" }}  onClick={() => setSong(prop.preview,prop.img,prop.name)}>
+            <Link href={""} style={{ textDecoration: "none", color: "black" }}  onClick={() => setSong(prop.preview,prop.img,prop.name,prop.artists)}>
               <Typography
                 variant="h6"
                 sx={{

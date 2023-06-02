@@ -17,6 +17,7 @@ const Navbar = () => {
           alignItems: "center",
           borderRadius: 0,
           mb: "2px",
+          py:"2px"
         }}
         variant={'outlined'}
       >
@@ -29,14 +30,9 @@ const Navbar = () => {
           }}
         >
           {/* <HeadsetIcon sx={{ fontSize: 50 }} /> */}
-          <Typography variant="h1" sx={{ fontWeight: 600 }}>
+          <Typography variant="h1">
             Rythm
           </Typography>
-        </Box>
-        <Box sx={{ mr: 2, display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton>
-            <Avatar src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" />
-          </IconButton>
         </Box>
       </Paper>
     </>
