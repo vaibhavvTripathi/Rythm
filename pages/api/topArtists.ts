@@ -27,11 +27,11 @@ export default async function handler(
          )
     })
  
-    res.json(artistData)
+     res.json(artistData)
   }
   catch(err) {
     console.log(err)
-    res.send(404)
+     res.send(404)
   }
    
 }

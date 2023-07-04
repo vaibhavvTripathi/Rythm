@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default async function handler (req: NextApiRequest, res: NextApiResponse) {
   const token = req.body.token;
   const url = `https://api.spotify.com/v1/me/player/recently-played?limit=10&after=1484811043508`;
   const options = {

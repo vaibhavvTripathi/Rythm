@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 export default async function  handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.body.token;
@@ -25,10 +26,11 @@ export default async function  handler(req: NextApiRequest, res: NextApiResponse
         type : item.type
        }
     })
-    res.json(newRelease)
+    console.log(newRelease)
+     res.json(newRelease)
   }
   catch (err) {
-    res.status(404).send(err)
+   return res.status(404).send(err)
   }
  
 

@@ -20,6 +20,7 @@ export default async function handler(
           }
           else {
             await dbConnect();
+         
             const email = decode.email;
             const response = await CustomPlaylistModel.find({email : email});
             const defaultResponse : CustomPlaylistType = {
@@ -30,6 +31,7 @@ export default async function handler(
           }
       }
       jwt.verify(jwtTokenString,secretKey,handleGet);
+   
     }
     catch(err) {
       res.json("internal server error");

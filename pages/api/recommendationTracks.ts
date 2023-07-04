@@ -15,9 +15,9 @@ export default async function handler(
     const response:AxiosResponse<data[]> = await axios.post('/followedArtists', {
         token : token,
     })
-    
+    res.json(response.data)
   }
   catch (err) {
-
+     res.status(400).json("error")
   }
 }

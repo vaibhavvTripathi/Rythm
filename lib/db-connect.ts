@@ -7,7 +7,8 @@ const dbConnect = async() => {
     const database = process.env.MONGODB_DATABASE;
 
     const connectionString = `mongodb+srv://${user}:${password}@cluster0.99kgr3r.mongodb.net/${database}?retryWrites=true&w=majority`;
-    mongoose.connect(connectionString)
+    await mongoose.connect(connectionString)
+    
 }
 
 export default dbConnect
