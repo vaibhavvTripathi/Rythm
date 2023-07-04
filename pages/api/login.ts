@@ -7,7 +7,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyApi = new spotifyWebApi({
     clientId: "757d949713674b90a63a6b27ba555f82",
     clientSecret: "30a96b5e1a2740f2a8a7d805ebf45f8d",
-    redirectUri: "http://localhost:3000",
+    redirectUri: "rythm-brown.vercel.app",
   });
   
   const code = req.body.code
