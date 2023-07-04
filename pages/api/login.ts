@@ -2,12 +2,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const spotifyWebApi = require("spotify-web-api-node");
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+
+export default function handler(req : any, res : any) {
   
   const spotifyApi = new spotifyWebApi({
     clientId: "757d949713674b90a63a6b27ba555f82",
     clientSecret: "30a96b5e1a2740f2a8a7d805ebf45f8d",
-    redirectUri: "rythm-brown.vercel.app",
+    redirectUri: req.body.uri,
   });
   
   const code = req.body.code

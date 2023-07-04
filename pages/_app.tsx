@@ -21,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
     axios
       .post("/api/login", {
         code: code,
+        uri : window.location.href
       })
       .then((res) => {
         Cookies.set("access_token", res.data.accessToken);
