@@ -6,11 +6,22 @@ const AUTH_URL =
 const Login = () => {
   return (
     <>
-      <div className="container">
-        <h1>Welcome back to Spotify</h1>
-        <div className="login-btn">
-          <a href={AUTH_URL} className="btn btn-primary">
-            Log In
+      <div
+        style={{
+          width: "fit-content",
+          margin: "0 auto",
+          marginTop: "15em",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+        className="container"
+      >
+        <h1 style={{fontFamily: "Ubuntu, sans-serif"}}>Welcome back to Rythm</h1>
+        <div style={{padding:"0.5em 1em",backgroundColor:"green",borderRadius:"20px"}} className="login-btn">
+          <a style={{textDecoration:"none",fontSize:"1em",color:"white",fontFamily: "Ubuntu, sans-serif"}} href={AUTH_URL} className="btn btn-primary">
+            Log In With Spotify
           </a>
         </div>
       </div>
