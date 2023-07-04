@@ -10,7 +10,7 @@ export default function handler(req : any, res : any) {
     clientSecret: "30a96b5e1a2740f2a8a7d805ebf45f8d",
     redirectUri: req.body.uri,
   });
-  
+  console.log(req.body.uri)
   const code = req.body.code
 
   spotifyApi
